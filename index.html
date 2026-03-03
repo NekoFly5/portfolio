@@ -15,7 +15,6 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -306,187 +305,11 @@
         </div>
     </section>
 
-    <!-- Code Showcase Section -->
-    <section class="section code-showcase" id="code">
-        <div class="container">
-            <h2 class="section-title">
-                <span class="section-number">03.</span> Exemples de code
-            </h2>
-            <p class="section-subtitle">Un aperçu de mon travail en Java et C++</p>
-            <div class="code-editor">
-                <div class="code-tabs">
-                    <button class="code-tab active" data-lang="java">
-                        <i class="fab fa-java"></i> GroupManager.java
-                    </button>
-                    <button class="code-tab" data-lang="cpp">
-                        <i class="fas fa-gamepad"></i> GameEngine.cpp
-                    </button>
-                    <button class="code-tab" data-lang="sql">
-                        <i class="fas fa-database"></i> schema.sql
-                    </button>
-                </div>
-                <div class="code-panels">
-                    <div class="code-panel active" id="panel-java">
-                        <pre><code class="language-java">/**
- * Gestionnaire de création automatique de groupes TD/TP
- * Gère les contraintes et l'équilibrage des groupes
- */
-public class GroupManager {
-    private List&lt;Student&gt; students;
-    private Map&lt;String, List&lt;Constraint&gt;&gt; constraints;
-
-    public GroupManager(List&lt;Student&gt; students) {
-        this.students = new ArrayList&lt;&gt;(students);
-        this.constraints = new HashMap&lt;&gt;();
-    }
-
-    /**
-     * Génère des groupes équilibrés en respectant les contraintes
-     * @param groupCount nombre de groupes à créer
-     * @return liste des groupes générés
-     */
-    public List&lt;Group&gt; generateGroups(int groupCount) {
-        List&lt;Group&gt; groups = new ArrayList&lt;&gt;();
-        for (int i = 0; i &lt; groupCount; i++) {
-            groups.add(new Group("Groupe " + (i + 1)));
-        }
-
-        // Tri par niveau pour équilibrage
-        students.sort(Comparator.comparing(Student::getLevel).reversed());
-
-        // Distribution round-robin avec contraintes
-        int index = 0;
-        for (Student student : students) {
-            Group target = findBestGroup(groups, student, index);
-            target.addStudent(student);
-            index++;
-        }
-
-        return Collections.unmodifiableList(groups);
-    }
-
-    private Group findBestGroup(List&lt;Group&gt; groups,
-                                Student student, int idx) {
-        return groups.stream()
-            .filter(g -&gt; satisfiesConstraints(g, student))
-            .min(Comparator.comparingInt(Group::size))
-            .orElse(groups.get(idx % groups.size()));
-    }
-}</code></pre>
-                    </div>
-                    <div class="code-panel" id="panel-cpp">
-                        <pre><code class="language-cpp">/**
- * Moteur de jeu 2D - Gestion des collisions
- * Détection AABB et résolution physique
- */
-class CollisionEngine {
-private:
-    std::vector&lt;GameObject*&gt; objects;
-    QuadTree spatialIndex;
-
-public:
-    struct AABB {
-        float x, y, width, height;
-
-        bool intersects(const AABB&amp; other) const {
-            return x &lt; other.x + other.width  &amp;&amp;
-                   x + width &gt; other.x         &amp;&amp;
-                   y &lt; other.y + other.height &amp;&amp;
-                   y + height &gt; other.y;
-        }
-    };
-
-    void update(float deltaTime) {
-        // Mise à jour de l'index spatial
-        spatialIndex.clear();
-        for (auto* obj : objects) {
-            spatialIndex.insert(obj);
-        }
-
-        // Détection des collisions par paires
-        for (size_t i = 0; i &lt; objects.size(); i++) {
-            auto nearby = spatialIndex.query(
-                objects[i]-&gt;getBounds()
-            );
-
-            for (auto* other : nearby) {
-                if (objects[i] != other &amp;&amp;
-                    objects[i]-&gt;getBounds()
-                        .intersects(other-&gt;getBounds())) {
-                    resolveCollision(objects[i], other);
-                }
-            }
-        }
-    }
-
-    void resolveCollision(GameObject* a, GameObject* b) {
-        Vec2 normal = (b-&gt;position - a-&gt;position)
-                        .normalized();
-        float relVel = (b-&gt;velocity - a-&gt;velocity)
-                        .dot(normal);
-
-        if (relVel &lt; 0) {
-            float impulse = -1.8f * relVel /
-                            (a-&gt;invMass + b-&gt;invMass);
-            a-&gt;velocity -= impulse * a-&gt;invMass * normal;
-            b-&gt;velocity += impulse * b-&gt;invMass * normal;
-        }
-    }
-};</code></pre>
-                    </div>
-                    <div class="code-panel" id="panel-sql">
-                        <pre><code class="language-sql">-- Schéma de base de données
--- Gestion des étudiants et groupes
-
-CREATE TABLE etudiants (
-    id          INT PRIMARY KEY AUTO_INCREMENT,
-    nom         VARCHAR(100) NOT NULL,
-    prenom      VARCHAR(100) NOT NULL,
-    email       VARCHAR(255) UNIQUE NOT NULL,
-    niveau      ENUM('A1', 'A2', 'A3') DEFAULT 'A1',
-    date_inscription DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE groupes (
-    id          INT PRIMARY KEY AUTO_INCREMENT,
-    nom         VARCHAR(50) NOT NULL,
-    type        ENUM('TD', 'TP') NOT NULL,
-    capacite    INT DEFAULT 30,
-    semestre    INT NOT NULL
-);
-
-CREATE TABLE affectations (
-    etudiant_id INT NOT NULL,
-    groupe_id   INT NOT NULL,
-    date_affect DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (etudiant_id, groupe_id),
-    FOREIGN KEY (etudiant_id)
-        REFERENCES etudiants(id) ON DELETE CASCADE,
-    FOREIGN KEY (groupe_id)
-        REFERENCES groupes(id) ON DELETE CASCADE
-);
-
--- Vue : effectifs par groupe
-CREATE VIEW effectifs_groupes AS
-SELECT g.nom, g.type, COUNT(a.etudiant_id) AS effectif,
-       g.capacite,
-       ROUND(COUNT(a.etudiant_id) * 100.0
-             / g.capacite, 1) AS taux_remplissage
-FROM groupes g
-LEFT JOIN affectations a ON g.id = a.groupe_id
-GROUP BY g.id
-ORDER BY g.type, g.nom;</code></pre>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Skills Section -->
     <section class="section skills" id="skills">
         <div class="container">
             <h2 class="section-title">
-                <span class="section-number">04.</span> Mes compétences
+                <span class="section-number">03.</span> Mes compétences
             </h2>
             <div class="skills-grid">
                 <div class="skill-category">
@@ -581,7 +404,7 @@ ORDER BY g.type, g.nom;</code></pre>
     <section class="section experience" id="experience">
         <div class="container">
             <h2 class="section-title">
-                <span class="section-number">05.</span> Expérience professionnelle
+                <span class="section-number">04.</span> Expérience professionnelle
             </h2>
             <div class="timeline">
                 <div class="timeline-item">
@@ -628,7 +451,7 @@ ORDER BY g.type, g.nom;</code></pre>
     <section class="section interests" id="interests">
         <div class="container">
             <h2 class="section-title">
-                <span class="section-number">06.</span> Centres d'intérêt
+                <span class="section-number">05.</span> Centres d'intérêt
             </h2>
             <div class="interests-grid">
                 <div class="interest-card">
@@ -648,7 +471,7 @@ ORDER BY g.type, g.nom;</code></pre>
     <section class="section contact" id="contact">
         <div class="container">
             <h2 class="section-title">
-                <span class="section-number">07.</span> Me contacter
+                <span class="section-number">06.</span> Me contacter
             </h2>
             <p class="section-subtitle">
                 N'hésitez pas à me contacter pour discuter d'opportunités de stage ou de projets !
@@ -696,10 +519,6 @@ ORDER BY g.type, g.nom;</code></pre>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
     <script src="script.js"></script>
 </body>
 
