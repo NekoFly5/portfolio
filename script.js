@@ -378,3 +378,20 @@ document.addEventListener('mousemove', (e) => {
 if (typeof AOS !== 'undefined') {
     AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 80 });
 }
+
+/* ========================================
+   CODE TABS SWITCHING
+   ======================================== */
+document.querySelectorAll('.code-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        // Remove active from all tabs and panels
+        document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+        // Activate clicked tab and corresponding panel
+        tab.classList.add('active');
+        const lang = tab.dataset.lang;
+        document.getElementById('panel-' + lang).classList.add('active');
+        // Re-highlight with Prism
+        if (typeof Prism !== 'undefined') Prism.highlightAll();
+    });
+});
