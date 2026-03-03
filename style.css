@@ -1224,3 +1224,104 @@ img {
         gap: 2px;
     }
 }
+
+/* ========================================
+   THREE.JS BACKGROUND
+   ======================================== */
+#three-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+#three-bg canvas {
+    display: block;
+}
+
+#particleCanvas {
+    z-index: 1;
+}
+
+/* ========================================
+   CURSOR GLOW
+   ======================================== */
+.cursor-glow {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s;
+    mix-blend-mode: screen;
+}
+
+/* ========================================
+   ENHANCED CARD EFFECTS (with vanilla-tilt)
+   ======================================== */
+.info-card {
+    transform-style: preserve-3d;
+}
+
+.info-card .info-icon {
+    transform: translateZ(30px);
+}
+
+.info-card h3 {
+    transform: translateZ(20px);
+}
+
+.info-card p {
+    transform: translateZ(10px);
+}
+
+/* Glow border animation on hover */
+.project-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: var(--radius-lg);
+    padding: 1px;
+    background: linear-gradient(135deg, transparent, var(--primary), var(--accent), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+}
+
+.project-card:hover::before {
+    opacity: 1;
+}
+
+/* Animated gradient for the "looking for" card */
+.timeline-content.looking-for {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(6, 182, 212, 0.05));
+    animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+    }
+
+    50% {
+        box-shadow: 0 0 40px rgba(99, 102, 241, 0.25);
+    }
+}
+
+/* Hide cursor glow on mobile */
+@media (max-width: 768px) {
+    .cursor-glow {
+        display: none;
+    }
+}

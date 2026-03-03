@@ -13,6 +13,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -39,6 +40,7 @@
 
     <!-- Hero Section -->
     <section class="hero" id="hero">
+        <div id="three-bg"></div>
         <canvas id="particleCanvas"></canvas>
         <div class="hero-content">
             <div class="hero-badge">
@@ -135,22 +137,26 @@
                     </div>
                 </div>
                 <div class="about-info">
-                    <div class="info-card">
+                    <div class="info-card" data-tilt data-tilt-max="12" data-tilt-speed="400" data-tilt-glare
+                        data-tilt-max-glare="0.15">
                         <div class="info-icon"><i class="fas fa-laptop-code"></i></div>
                         <h3>Développement</h3>
                         <p>Création d'applications web et desktop avec des technologies modernes</p>
                     </div>
-                    <div class="info-card">
+                    <div class="info-card" data-tilt data-tilt-max="12" data-tilt-speed="400" data-tilt-glare
+                        data-tilt-max-glare="0.15">
                         <div class="info-icon"><i class="fas fa-users"></i></div>
                         <h3>Travail d'équipe</h3>
                         <p>Méthodologies Agile, gestion de projet et communication</p>
                     </div>
-                    <div class="info-card">
+                    <div class="info-card" data-tilt data-tilt-max="12" data-tilt-speed="400" data-tilt-glare
+                        data-tilt-max-glare="0.15">
                         <div class="info-icon"><i class="fas fa-lightbulb"></i></div>
                         <h3>Créativité</h3>
                         <p>Conception UI/UX, design thinking et innovation technique</p>
                     </div>
-                    <div class="info-card">
+                    <div class="info-card" data-tilt data-tilt-max="12" data-tilt-speed="400" data-tilt-glare
+                        data-tilt-max-glare="0.15">
                         <div class="info-icon"><i class="fas fa-graduation-cap"></i></div>
                         <h3>Apprentissage</h3>
                         <p>Toujours en quête de nouvelles compétences et technologies</p>
@@ -512,6 +518,11 @@
         </div>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="script.js"></script>
 </body>
 
