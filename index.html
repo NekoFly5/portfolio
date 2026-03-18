@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>Alexandre Wang — Développeur</title>
+    <meta name="description"
+        content="Portfolio d'Alexandre Wang, étudiant en BUT Informatique à l'IUT d'Orsay. Recherche un stage de 3 mois.">
+    <meta property="og:title" content="Alexandre Wang — Portfolio Développeur">
+    <meta property="og:description"
+        content="Étudiant BUT Informatique, Paris Saclay. Stage 3 mois — 20 avril au 10 juillet 2026.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Custom cursor -->
+    <div id="cursor-outer" class="cursor-outer"></div>
+    <div id="cursor-dot" class="cursor-dot"></div>
+
+    <!-- BIOS Boot Screen -->
+    <div id="bios-screen" class="bios-screen">
+        <div class="bios-scanlines"></div>
+        <div class="bios-inner">
+            <div class="bios-header">
+                <div class="bios-header-left">
+                    <span class="bios-logo">▓▒░ WANG<span class="bios-accent">TECH</span> ░▒▓</span>
+                    <span class="bios-version">BIOS v2026.1 — Release 2.0</span>
+                </div>
+                <div class="bios-header-right">
+                    <span class="bios-date" id="biosDate"></span>
+                </div>
+            </div>
+            <div class="bios-divider"></div>
+            <div class="bios-body">
+                <pre id="biosOutput"></pre>
+            </div>
+            <div class="bios-divider"></div>
+            <div class="bios-footer">
+                <div class="bios-keys">
+                    <span><kbd>DEL</kbd> Setup</span>
+                    <span><kbd>F2</kbd> BIOS Menu</span>
+                    <span><kbd>F12</kbd> Boot Menu</span>
+                    <span><kbd>ESC</kbd> Skip</span>
+                </div>
+                <span id="biosHint" class="bios-hint-text"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="login-dots">
+                    <span class="ldot red"></span>
+                    <span class="ldot yellow"></span>
+                    <span class="ldot green"></span>
+                </div>
+                <span class="login-title">portfolio.exe</span>
+            </div>
+            <div class="login-body">
+                <div class="login-logo">AW_</div>
+                <p class="login-system">Alexandre Wang OS — v2026.1</p>
+
+                <div class="login-field" id="loginField1">
+                    <span class="field-label">login</span>
+                    <span class="field-val" id="fieldUser"></span>
+                    <span class="field-cursor" id="cursor1">|</span>
+                </div>
+                <div class="login-field login-field-hidden" id="loginField2">
+                    <span class="field-label">password</span>
+                    <span class="field-val" id="fieldPass"></span>
+                    <span class="field-cursor" id="cursor2">|</span>
+                </div>
+
+                <div class="login-status" id="loginStatus"></div>
+
+                <div class="login-bar-wrap" id="loginBarWrap">
+                    <div class="login-bar" id="loginBar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="nav" class="nav">
+        <div class="nav-inner">
+            <a href="#hero" class="nav-logo">Alexandre Wang</a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#about" class="nav-link"><span>01</span> À propos</a></li>
+                <li><a href="#projects" class="nav-link"><span>02</span> Projets</a></li>
+                <li><a href="#skills" class="nav-link"><span>03</span> Compétences</a></li>
+                <li><a href="#experience" class="nav-link"><span>04</span> Expérience</a></li>
+                <li><a href="#contact" class="nav-link"><span>05</span> Contact</a></li>
+            </ul>
+            <button class="burger" id="burger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile nav overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    <nav class="mobile-nav" id="mobileNav">
+        <ul>
+            <li><a href="#about" class="mnav-link"><em>01</em> À propos</a></li>
+            <li><a href="#projects" class="mnav-link"><em>02</em> Projets</a></li>
+            <li><a href="#skills" class="mnav-link"><em>03</em> Compétences</a></li>
+            <li><a href="#experience" class="mnav-link"><em>04</em> Expérience</a></li>
+            <li><a href="#contact" class="mnav-link"><em>05</em> Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <!-- ============================
+             HERO
+             ============================ -->
+        <section id="hero" class="hero">
+            <div id="three-bg"></div>
+            <div class="hero-inner">
+                <div class="hero-tag block">
+                    <span class="dot-pulse"></span>
+                    Disponible — Stage 20 avr. au 10 juil. 2026
+                </div>
+                <h1 class="hero-name">
+                    <span class="name-line block" data-delay="100">Alexandre</span>
+                    <span class="name-line name-line-2 block" data-delay="200">Wang<span class="accent">.</span></span>
+                </h1>
+                <div class="hero-subtitle block" data-delay="350">
+                    <span id="typedText"></span><span class="type-cursor">|</span>
+                </div>
+                <p class="hero-bio block" data-delay="500">
+                    Étudiant en <strong>BUT Informatique</strong> à l'IUT d'Orsay — Paris Saclay.
+                    Je conçois et développe des solutions qui mêlent rigueur technique
+                    et expérience utilisateur. Passionné, curieux, en quête de mon prochain défi.
+                </p>
+                <div class="hero-actions block" data-delay="650">
+                    <a href="#projects" class="btn-fill">Voir mes projets</a>
+                    <a href="#contact" class="btn-ghost">Me contacter</a>
+                    <a href="cv.pdf" download="CV_Alexandre_Wang.pdf" class="btn-cv">CV <i class="fas fa-download"></i></a>
+                </div>
+                <div class="hero-scroll block" data-delay="900">
+                    <a href="#about" aria-label="Défiler">
+                        <span class="scroll-arrow"></span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- ==============================
+                 DESKTOP WINDOWS (hero only)
+                 ============================== -->
+            <div id="deskWindows" class="desk-windows">
+
+                <!-- Terminal -->
+                <div class="win" id="winTerm">
+                    <div class="win-bar" id="barTerm">
+                        <div class="win-btns">
+                            <span class="wbtn wclose" data-win="winTerm" title="Fermer">×</span>
+                            <span class="wbtn wmin"   data-win="winTerm" title="Minimiser">−</span>
+                            <span class="wbtn wmax"   data-win="winTerm" title="Agrandir">⤢</span>
+                        </div>
+                        <div class="win-tabs">
+                            <span class="wtab active">Terminal</span>
+                            <span class="wtab" data-show="winSys">System</span>
+                            <span class="wtab" data-show="winTask">Tasks</span>
+                            <a href="#contact" class="wtab">Contact</a>
+                        </div>
+                    </div>
+                    <div class="win-body term-body">
+                        <div id="termLines" class="term-lines"></div>
+                        <div class="term-row" id="termRow">
+                            <span class="term-prompt">alexandre@portfolio:~$&nbsp;</span>
+                            <input id="termInput" type="text" autocomplete="off" spellcheck="false" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Monitor -->
+                <div class="win" id="winSys">
+                    <div class="win-bar" id="barSys">
+                        <div class="win-btns">
+                            <span class="wbtn wclose" data-win="winSys">×</span>
+                            <span class="wbtn wmin"   data-win="winSys">−</span>
+                            <span class="wbtn wmax"   data-win="winSys">⤢</span>
+                        </div>
+                        <span class="win-title">System Monitor</span>
+                    </div>
+                    <div class="win-body sysmon-body">
+                        <div class="smon-row">
+                            <span class="smon-lbl">CPU</span>
+                            <div class="smon-graph-wrap"><canvas id="cpuCanvas" width="160" height="36"></canvas></div>
+                            <span class="smon-val" id="cpuVal">0%</span>
+                        </div>
+                        <div class="smon-row">
+                            <span class="smon-lbl">RAM</span>
+                            <div class="smon-bar-wrap"><div class="smon-bar" id="ramBar"></div></div>
+                            <span class="smon-val" id="ramVal">0%</span>
+                        </div>
+                        <div class="smon-row">
+                            <span class="smon-lbl">NET</span>
+                            <div class="smon-graph-wrap"><canvas id="netCanvas" width="160" height="36"></canvas></div>
+                            <span class="smon-val" id="netVal">0 kb/s</span>
+                        </div>
+                        <div class="smon-stats">
+                            <div class="smon-stat"><span>OS</span><span>Alexandre-OS v2026.1</span></div>
+                            <div class="smon-stat"><span>KERNEL</span><span>portfolio-6.1.0</span></div>
+                            <div class="smon-stat"><span>UPTIME</span><span id="uptimeVal">00:00:00</span></div>
+                            <div class="smon-stat"><span>SHELL</span><span>portfolio.sh</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task Manager -->
+                <div class="win" id="winTask">
+                    <div class="win-bar" id="barTask">
+                        <div class="win-btns">
+                            <span class="wbtn wclose" data-win="winTask">×</span>
+                            <span class="wbtn wmin"   data-win="winTask">−</span>
+                            <span class="wbtn wmax"   data-win="winTask">⤢</span>
+                        </div>
+                        <span class="win-title">Task Manager</span>
+                    </div>
+                    <div class="win-body task-body">
+                        <div class="task-head">
+                            <span>Process</span>
+                            <span>PID</span>
+                            <span>CPU</span>
+                            <span>MEM</span>
+                        </div>
+                        <div id="taskList"></div>
+                    </div>
+                </div>
+
+                <!-- Taskbar -->
+                <div class="taskbar" id="taskbar">
+                    <button class="tb-app" data-win="winTerm" title="Terminal">
+                        <i class="fas fa-terminal"></i>
+                        <span>Terminal</span>
+                    </button>
+                    <button class="tb-app" data-win="winSys" title="System Monitor">
+                        <i class="fas fa-chart-area"></i>
+                        <span>Monitor</span>
+                    </button>
+                    <button class="tb-app" data-win="winTask" title="Task Manager">
+                        <i class="fas fa-microchip"></i>
+                        <span>Tasks</span>
+                    </button>
+                </div>
+
+            </div><!-- /deskWindows -->
+
+        </section>
+
+        <!-- ============================
+             À PROPOS
+             ============================ -->
+        <section id="about" class="section">
+            <div class="section-curtain"></div>
+            <div class="section-inner">
+                <header class="section-header block">
+                    <span class="section-num">01</span>
+                    <h2 class="section-title">À propos de moi</h2>
+                    <div class="section-line"></div>
+                </header>
+
+                <div class="about-grid">
+                    <div class="about-text">
+                        <p class="block" data-delay="0">
+                            Je m'appelle Alexandre, étudiant en deuxième année de
+                            <strong>BUT Informatique</strong> à l'IUT d'Orsay,
+                            Université Paris Saclay. Passionné par le développement logiciel,
+                            j'aime concevoir des solutions numériques concrètes et impactantes.
+                        </p>
+                        <p class="block" data-delay="80">
+                            Basé à <strong>Vitry-sur-Seine</strong>. Je parle couramment
+                            le <strong>français</strong> (natif), l'<strong>anglais</strong> (B1)
+                            et le <strong>chinois</strong> (C1). J'apprécie autant le travail
+                            en équipe que l'autonomie, avec une approche Agile.
+                        </p>
+                        <div class="about-skills block" data-delay="160">
+                            <p class="skills-label">Technologies que j'utilise :</p>
+                            <ul class="skills-two-col">
+                                <li>Java</li>
+                                <li>C++</li>
+                                <li>PHP</li>
+                                <li>HTML / CSS</li>
+                                <li>JavaScript</li>
+                                <li>SQL</li>
+                                <li>Git &amp; GitHub</li>
+                                <li>Docker</li>
+                            </ul>
+                        </div>
+                        <div class="parcours block" data-delay="240">
+                            <div class="parcours-item">
+                                <span class="p-date">2024 — 2027</span>
+                                <span class="p-info">BUT Informatique — IUT d'Orsay, Paris Saclay</span>
+                            </div>
+                            <div class="parcours-item">
+                                <span class="p-date">2021 — 2024</span>
+                                <span class="p-info">BAC STI2D — Lycée Adolphe Chérioux</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-avatar block block-right" data-delay="100">
+                        <div class="avatar-frame">
+                            <div class="avatar-img">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <div class="about-langs">
+                            <div class="lang-item">
+                                <span class="lang-name">Français</span>
+                                <span class="lang-level">Natif</span>
+                            </div>
+                            <div class="lang-item">
+                                <span class="lang-name">Anglais</span>
+                                <span class="lang-level">B1</span>
+                            </div>
+                            <div class="lang-item">
+                                <span class="lang-name">Chinois</span>
+                                <span class="lang-level accent-text">C1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================
+             PROJETS
+             ============================ -->
+        <section id="projects" class="section section-dark">
+            <div class="section-curtain curtain-dark"></div>
+            <div class="section-inner">
+                <header class="section-header block">
+                    <span class="section-num">02</span>
+                    <h2 class="section-title">Projets</h2>
+                    <div class="section-line"></div>
+                </header>
+                <p class="section-sub block">Travaux académiques &amp; personnels</p>
+
+                <div class="projects-grid stagger">
+                    <!-- Projet 1 -->
+                    <article class="project-card">
+                        <div class="card-top">
+                            <span class="card-date">2025 — 2026</span>
+                            <div class="card-links">
+                                <a href="#" aria-label="Voir le projet" title="Demo"><i class="fas fa-arrow-up-right-from-square"></i></a>
+                                <a href="#" aria-label="Code source" title="GitHub"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                        <h3 class="card-title">Application de création de groupes</h3>
+                        <p class="card-desc">Automatisation de la création de groupes TD/TP avec gestion des contraintes. Interface web et bureau, développé en équipe avec méthodologie Agile.</p>
+                        <ul class="card-tech">
+                            <li>Java</li>
+                            <li>PHP</li>
+                            <li>HTML/CSS</li>
+                            <li>SQL</li>
+                        </ul>
+                    </article>
+
+                    <!-- Projet 2 -->
+                    <article class="project-card">
+                        <div class="card-top">
+                            <span class="card-date">2024 — 2025</span>
+                            <div class="card-links">
+                                <a href="#" aria-label="Voir le projet" title="Demo"><i class="fas fa-arrow-up-right-from-square"></i></a>
+                                <a href="#" aria-label="Code source" title="GitHub"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                        <h3 class="card-title">Jeu vidéo 2D en C++</h3>
+                        <p class="card-desc">Développement d'un jeu 2D avec gestion des animations, collisions et logique interne. Collaboration en équipe via Git et Code::Blocks.</p>
+                        <ul class="card-tech">
+                            <li>C++</li>
+                            <li>Git</li>
+                            <li>Code::Blocks</li>
+                        </ul>
+                    </article>
+
+                    <!-- Projet 3 -->
+                    <article class="project-card">
+                        <div class="card-top">
+                            <span class="card-date">2024 — 2025</span>
+                            <div class="card-links">
+                                <a href="#" aria-label="Voir le projet" title="Demo"><i class="fas fa-arrow-up-right-from-square"></i></a>
+                                <a href="#" aria-label="Code source" title="GitHub"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                        <h3 class="card-title">Site web responsive</h3>
+                        <p class="card-desc">Conception d'un site responsive et interactif en HTML/CSS. Application des principes de design et ergonomie pour une expérience utilisateur optimale.</p>
+                        <ul class="card-tech">
+                            <li>HTML</li>
+                            <li>CSS</li>
+                            <li>Responsive</li>
+                        </ul>
+                    </article>
+
+                    <!-- Projet 4 -->
+                    <article class="project-card">
+                        <div class="card-top">
+                            <span class="card-date">2024 — 2025</span>
+                            <div class="card-links">
+                                <a href="#" aria-label="Voir le projet" title="Demo"><i class="fas fa-arrow-up-right-from-square"></i></a>
+                                <a href="#" aria-label="Code source" title="GitHub"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                        <h3 class="card-title">Configuration Réseau &amp; Firewall</h3>
+                        <p class="card-desc">Mise en place de règles firewall, NAT, VLANs et filtrage réseau sur routeurs Linux. Politique de sécurité réseau complète.</p>
+                        <ul class="card-tech">
+                            <li>Linux</li>
+                            <li>Réseau</li>
+                            <li>Sécurité</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================
+             COMPÉTENCES
+             ============================ -->
+        <section id="skills" class="section">
+            <div class="section-curtain"></div>
+            <div class="section-inner">
+                <header class="section-header block">
+                    <span class="section-num">03</span>
+                    <h2 class="section-title">Compétences</h2>
+                    <div class="section-line"></div>
+                </header>
+
+                <div class="skills-grid stagger">
+                    <div class="skill-group">
+                        <h3 class="skill-group-title"><i class="fas fa-code"></i> Langages</h3>
+                        <div class="tag-cloud">
+                            <span class="tag">C++</span>
+                            <span class="tag">Java</span>
+                            <span class="tag">PHP</span>
+                            <span class="tag">HTML / CSS</span>
+                            <span class="tag">JavaScript</span>
+                            <span class="tag">SQL</span>
+                        </div>
+                    </div>
+                    <div class="skill-group">
+                        <h3 class="skill-group-title"><i class="fas fa-screwdriver-wrench"></i> Outils</h3>
+                        <div class="tag-cloud">
+                            <span class="tag">Git</span>
+                            <span class="tag">GitHub / GitLab</span>
+                            <span class="tag">Docker</span>
+                            <span class="tag">VS Code</span>
+                            <span class="tag">Penpot</span>
+                        </div>
+                    </div>
+                    <div class="skill-group">
+                        <h3 class="skill-group-title"><i class="fas fa-server"></i> Systèmes &amp; Méthodes</h3>
+                        <div class="tag-cloud">
+                            <span class="tag">Linux</span>
+                            <span class="tag">Windows</span>
+                            <span class="tag">Agile</span>
+                            <span class="tag">Réseau</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================
+             EXPÉRIENCE
+             ============================ -->
+        <section id="experience" class="section section-dark">
+            <div class="section-curtain curtain-dark"></div>
+            <div class="section-inner">
+                <header class="section-header block">
+                    <span class="section-num">04</span>
+                    <h2 class="section-title">Expérience</h2>
+                    <div class="section-line"></div>
+                </header>
+
+                <div class="exp-list">
+                    <!-- Stage recherché -->
+                    <div class="exp-item exp-open block">
+                        <div class="exp-left">
+                            <span class="exp-badge">
+                                <span class="dot-pulse"></span> Disponible
+                            </span>
+                            <span class="exp-dates">20 Avr — 10 Juil 2026</span>
+                        </div>
+                        <div class="exp-right">
+                            <h3 class="exp-title">Votre entreprise ?</h3>
+                            <p class="exp-role">Stage de 3 mois — Développement informatique</p>
+                            <p class="exp-desc">Motivé et passionné, je recherche un stage de 3 mois pour mettre en pratique mes compétences en développement web et desktop dans un environnement professionnel stimulant.</p>
+                            <a href="#contact" class="btn-ghost btn-sm">Me contacter <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Tang Frères -->
+                    <div class="exp-item block" data-delay="120">
+                        <div class="exp-left">
+                            <span class="exp-dates">Juil — Août 2023</span>
+                        </div>
+                        <div class="exp-right">
+                            <h3 class="exp-title">Tang Frères</h3>
+                            <p class="exp-role">Employé polyvalent</p>
+                            <ul class="exp-tasks">
+                                <li>Accueil et service client</li>
+                                <li>Préparation et gestion du rayon fruits &amp; légumes</li>
+                                <li>Gestion du stock</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================
+             CENTRES D'INTÉRÊT
+             ============================ -->
+        <section id="interests" class="section">
+            <div class="section-curtain"></div>
+            <div class="section-inner">
+                <header class="section-header block">
+                    <span class="section-num">05</span>
+                    <h2 class="section-title">Centres d'intérêt</h2>
+                    <div class="section-line"></div>
+                </header>
+                <div class="interests-row stagger">
+                    <div class="interest-item">
+                        <i class="fas fa-music"></i>
+                        <span>Musique asiatique</span>
+                    </div>
+                    <div class="interest-item">
+                        <i class="fas fa-dragon"></i>
+                        <span>Animation japonaise</span>
+                    </div>
+                    <div class="interest-item">
+                        <i class="fas fa-code"></i>
+                        <span>Développement</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================
+             CONTACT
+             ============================ -->
+        <section id="contact" class="section contact-section">
+            <div class="section-inner contact-inner">
+                <span class="contact-num block">06</span>
+                <h2 class="contact-heading block" data-delay="80">On se parle ?</h2>
+                <p class="contact-sub block" data-delay="160">
+                    Je recherche un stage de 3 mois (20 avr. — 10 juil. 2026).
+                    Envoyez-moi un message — pour une opportunité ou juste pour échanger !
+                </p>
+                <a href="mailto:wlkalexandre55@gmail.com" class="btn-fill btn-xl block" data-delay="260">
+                    Dire bonjour <i class="fas fa-paper-plane"></i>
+                </a>
+                <div class="contact-links block" data-delay="360">
+                    <a href="tel:+33760330704" class="c-link">
+                        <i class="fas fa-phone"></i> 07 60 33 07 04
+                    </a>
+                    <a href="https://www.linkedin.com/in/alexandre-wang-008954309/" target="_blank"
+                        rel="noopener noreferrer" class="c-link">
+                        <i class="fab fa-linkedin"></i> LinkedIn
+                    </a>
+                    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="c-link">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Conçu &amp; développé par <a href="#hero">Alexandre Wang</a></p>
+            <div class="footer-links">
+                <a href="https://github.com/" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/alexandre-wang-008954309/" target="_blank"
+                    rel="noopener noreferrer" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="mailto:wlkalexandre55@gmail.com" aria-label="Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
