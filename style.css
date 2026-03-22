@@ -1121,14 +1121,133 @@ body.cursor-click .cursor-outer {
 }
 
 /* ============================================================
-   INTERESTS
+   STAR METHOD (project cards)
    ============================================================ */
-.interests-row {
+.card-star {
+    margin-bottom: 16px;
     display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 6px;
 }
 
+.star-row {
+    display: flex;
+    gap: 10px;
+    font-size: 0.83rem;
+    line-height: 1.55;
+    color: var(--text-2);
+}
+
+.star-lbl {
+    flex-shrink: 0;
+    width: 16px;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 0.78rem;
+    color: var(--accent);
+    padding-top: 1px;
+}
+
+/* ============================================================
+   AMBITIONS
+   ============================================================ */
+.ambitions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.ambition-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 28px 24px;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.ambition-card:hover {
+    border-color: rgba(57, 231, 95, 0.25);
+    transform: translateY(-3px);
+}
+
+.ambition-term {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.ambition-horizon {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+}
+
+.ambition-card p {
+    font-size: 0.875rem;
+    color: var(--text-2);
+    line-height: 1.7;
+}
+
+/* ============================================================
+   INTERESTS
+   ============================================================ */
+.interests-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.interest-card {
+    display: flex;
+    gap: 20px;
+    padding: 22px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.interest-card:hover {
+    border-color: rgba(57, 231, 95, 0.2);
+    transform: translateY(-2px);
+}
+
+.interest-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-dim);
+    border-radius: 6px;
+    color: var(--accent);
+    font-size: 1.1rem;
+}
+
+.interest-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.interest-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.interest-detail {
+    font-size: 0.86rem;
+    color: var(--text-2);
+    line-height: 1.65;
+}
+
+/* Keep old .interest-item in case it's referenced elsewhere */
 .interest-item {
     display: flex;
     align-items: center;
@@ -1402,6 +1521,10 @@ body.cursor-click .cursor-outer {
     }
 
     .exp-left { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 12px; }
+
+    .ambitions-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 768px) {
