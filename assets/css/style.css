@@ -2276,6 +2276,15 @@ body.cursor-click .cursor-outer {
     filter: brightness(1);
 }
 
+.proj-img-contain {
+    object-fit: contain !important;
+    padding: 20px;
+    background: #120a00;
+    transform: none !important;
+}
+
+.proj-card:hover .proj-img-contain { transform: none !important; }
+
 .proj-img--placeholder {
     display: flex;
     align-items: center;
@@ -2421,3 +2430,174 @@ body.cursor-click .cursor-outer {
 }
 
 .proj-star-panel.open { display: flex; }
+
+/* ============================================================
+   PROJECT MODAL
+   ============================================================ */
+.pmodal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.pmodal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.pmodal {
+    background: #111114;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 36px 40px 40px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(16px) scale(0.98);
+    transition: transform 0.25s ease;
+    scrollbar-width: none;
+}
+
+.pmodal-overlay.open .pmodal {
+    transform: translateY(0) scale(1);
+}
+
+.pmodal::-webkit-scrollbar { display: none; }
+
+.pmodal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.pmodal-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--text-3);
+    text-transform: uppercase;
+}
+
+.pmodal-close {
+    background: none;
+    border: none;
+    color: var(--text-3);
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 2px;
+    transition: color 0.2s;
+}
+
+.pmodal-close:hover { color: var(--text-1); }
+
+.pmodal-title {
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: var(--text-1);
+    line-height: 1.2;
+    margin-bottom: 28px;
+}
+
+.pmodal-star {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+}
+
+.pmodal-star .star-row {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--text-2);
+    gap: 12px;
+}
+
+.pmodal-star .star-lbl {
+    font-size: 0.65rem;
+    padding: 2px 7px;
+    min-width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.pmodal-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    padding-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pmodal-stack-lbl {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: var(--text-3);
+    display: block;
+    margin-bottom: 10px;
+}
+
+.pmodal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+}
+
+.pmodal-tags li {
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    color: var(--text-2);
+    padding: 4px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+}
+
+.pmodal-links {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.pmodal-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-1);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.pmodal-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 600px) {
+    .pmodal { padding: 24px 20px 28px; }
+    .pmodal-title { font-size: 1.4rem; }
+}

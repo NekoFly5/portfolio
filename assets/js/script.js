@@ -895,7 +895,7 @@ if (termInput) {
 })();
 
 /* ============================================================
-   PROJECTS — FILTER & PLUS D'INFOS
+   PROJECTS — FILTER & MODAL
    ============================================================ */
 (function () {
     // Filter
@@ -905,20 +905,76 @@ if (termInput) {
             btn.classList.add('active');
             const filter = btn.dataset.filter;
             document.querySelectorAll('.proj-card').forEach(card => {
-                const show = filter === 'all' || card.dataset.category === filter;
-                card.style.display = show ? '' : 'none';
+                card.style.display = (filter === 'all' || card.dataset.category === filter) ? '' : 'none';
             });
         });
     });
 
-    // Plus d'infos toggle
-    document.querySelectorAll('.proj-more').forEach(btn => {
-        const textNode = btn.firstChild;
-        btn.addEventListener('click', () => {
-            const panel = btn.nextElementSibling;
-            btn.classList.toggle('open');
-            panel.classList.toggle('open');
-            textNode.textContent = btn.classList.contains('open') ? "Moins d'infos " : "Plus d'infos ";
+    // Modal
+    const overlay   = document.getElementById('projModal');
+    const mLabel    = document.getElementById('pmodalLabel');
+    const mTitle    = document.getElementById('pmodalTitle');
+    const mStar     = document.getElementById('pmodalStar');
+    const mTags     = document.getElementById('pmodalTags');
+    const mLinks    = document.getElementById('pmodalLinks');
+    const closeBtn  = document.getElementById('pmodalClose');
+
+    function openModal(card) {
+        // Label
+        mLabel.textContent = card.dataset.label || '';
+
+        // Title
+        mTitle.textContent = card.querySelector('.proj-title').textContent;
+
+        // STAR rows
+        mStar.innerHTML = '';
+        card.querySelectorAll('.proj-data .star-row').forEach(row => {
+            mStar.appendChild(row.cloneNode(true));
         });
+
+        // Tags
+        mTags.innerHTML = '';
+        card.querySelectorAll('.proj-tags li').forEach(li => {
+            const el = document.createElement('li');
+            el.textContent = li.textContent;
+            mTags.appendChild(el);
+        });
+
+        // Links
+        mLinks.innerHTML = '';
+        card.querySelectorAll('.proj-links a').forEach(a => {
+            const link = document.createElement('a');
+            link.href = a.href;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.className = 'pmodal-link';
+            const icon = a.querySelector('i');
+            const isGithub = icon && icon.classList.contains('fa-github');
+            const isDemo   = icon && icon.classList.contains('fa-arrow-up-right-from-square');
+            link.innerHTML = isGithub
+                ? '<i class="fab fa-github"></i> GitHub'
+                : isDemo
+                    ? '<i class="fas fa-arrow-up-right-from-square"></i> Démo'
+                    : a.innerHTML;
+            mLinks.appendChild(link);
+        });
+
+        overlay.classList.add('open');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        overlay.classList.remove('open');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.proj-more').forEach(btn => {
+        btn.addEventListener('click', () => openModal(btn.closest('.proj-card')));
     });
+
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 })();
