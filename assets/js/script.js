@@ -669,10 +669,11 @@ const COMMANDS = {
         termBlank();
         termLine('  Projets :', 'hi');
         [
-            ['2025-2026', 'Application création groupes',  'Java, PHP, SQL'],
-            ['2024-2025', 'Jeu vidéo 2D',                  'C++, Git'],
-            ['2024-2025', 'Site web responsive',            'HTML, CSS'],
-            ['2024-2025', 'Config Réseau & Firewall',       'Linux, Réseau'],
+            ['2025-2026', 'Glitch Party',                   'Node.js, Socket.io, Three.js, Docker'],
+            ['2025-2026', 'Application création groupes',   'Java, PHP, SQL'],
+            ['2024-2025', 'Jeu vidéo 2D',                   'C++, Git'],
+            ['2024-2025', 'Site web responsive',             'HTML, CSS'],
+            ['2024-2025', 'Config Réseau & Firewall',        'Linux, Réseau'],
         ].forEach(([date, name, tech], i) => {
             termLine(`  [${i+1}] ${date}  ${name.padEnd(30)} (${tech})`, '');
         });
@@ -891,4 +892,33 @@ if (termInput) {
         });
         render();
     }, 1200);
+})();
+
+/* ============================================================
+   PROJECTS — FILTER & PLUS D'INFOS
+   ============================================================ */
+(function () {
+    // Filter
+    document.querySelectorAll('.proj-filter').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.proj-filter').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const filter = btn.dataset.filter;
+            document.querySelectorAll('.proj-card').forEach(card => {
+                const show = filter === 'all' || card.dataset.category === filter;
+                card.style.display = show ? '' : 'none';
+            });
+        });
+    });
+
+    // Plus d'infos toggle
+    document.querySelectorAll('.proj-more').forEach(btn => {
+        const textNode = btn.firstChild;
+        btn.addEventListener('click', () => {
+            const panel = btn.nextElementSibling;
+            btn.classList.toggle('open');
+            panel.classList.toggle('open');
+            textNode.textContent = btn.classList.contains('open') ? "Moins d'infos " : "Plus d'infos ";
+        });
+    });
 })();

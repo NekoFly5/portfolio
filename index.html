@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
     <title>Alexandre Wang — Développeur</title>
     <meta name="description"
         content="Portfolio d'Alexandre Wang, étudiant en BUT Informatique à l'IUT d'Orsay. Recherche un stage de 3 mois.">
@@ -18,7 +18,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 
@@ -151,7 +151,7 @@
                 <div class="hero-actions block" data-delay="650">
                     <a href="#projects" class="btn-fill">Voir mes projets</a>
                     <a href="#contact" class="btn-ghost">Me contacter</a>
-                    <a href="cv.pdf" download="CV_Alexandre_Wang.pdf" class="btn-cv">CV <i class="fas fa-download"></i></a>
+                    <a href="assets/docs/cv.pdf" download="CV_Alexandre_Wang.pdf" class="btn-cv">CV <i class="fas fa-download"></i></a>
                 </div>
                 <div class="hero-scroll block" data-delay="900">
                     <a href="#about" aria-label="Défiler">
@@ -319,7 +319,7 @@
                     <div class="about-avatar block block-right" data-delay="100">
                         <div class="avatar-frame">
                             <div class="avatar-img">
-                                <img src="Photo.jpg" alt="Alexandre Wang" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
+                                <img src="assets/images/Photo.jpg" alt="Alexandre Wang" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
                             </div>
                         </div>
                         <div class="about-langs">
@@ -352,101 +352,206 @@
                     <h2 class="section-title">Projets</h2>
                     <div class="section-line"></div>
                 </header>
-                <p class="section-sub block">Travaux académiques &amp; personnels</p>
+                <div class="proj-topbar block">
+                    <p class="section-sub">Travaux académiques &amp; personnels</p>
+                    <div class="proj-filters">
+                        <button class="proj-filter" data-filter="perso">Perso</button>
+                        <button class="proj-filter" data-filter="scolaire">Scolaire</button>
+                        <button class="proj-filter active" data-filter="all">Tous</button>
+                    </div>
+                </div>
 
-                <div class="projects-grid stagger">
-                    <!-- Projet 1 -->
-                    <article class="project-card">
-                        <div class="card-top">
-                            <span class="card-date">2025 — 2026</span>
-                            <div class="card-links">
-                                <a href="#" aria-label="Voir le projet" title="Demo"><i class="fas fa-arrow-up-right-from-square"></i></a>
-                                <a href="#" aria-label="Code source" title="GitHub"><i class="fab fa-github"></i></a>
+                <div class="projects-grid-v2">
+
+                    <!-- Glitch Party -->
+                    <article class="proj-card" data-category="perso">
+                        <div class="proj-img proj-img--placeholder proj-img--glitch">
+                            <span>Glitch Party</span>
+                        </div>
+                        <div class="proj-body">
+                            <div class="proj-meta">
+                                <span class="proj-badge proj-badge--perso">Projet Personnel</span>
+                                <div class="proj-links">
+                                    <a href="https://glitch-party.xyz/game" target="_blank" rel="noopener noreferrer" title="Demo"><i class="fas fa-arrow-up-right-from-square"></i></a>
+                                </div>
+                            </div>
+                            <h3 class="proj-title">Glitch Party</h3>
+                            <p class="proj-desc">Jeu multijoueur temps réel sur mobile — les joueurs se dissimulent parmi 25 NPCs contrôlés par l'IA avec 8 effets Glitch aléatoires et 3 actions : Boost, Push, Blast.</p>
+                            <ul class="proj-tags">
+                                <li>Node.js</li><li>Socket.io</li><li>Three.js</li><li>Docker</li><li>JavaScript</li>
+                            </ul>
+                            <button class="proj-more">Plus d'infos <i class="fas fa-chevron-right"></i></button>
+                            <div class="proj-star-panel">
+                                <div class="star-row"><span class="star-lbl">S</span><span>Projet universitaire en équipe de 3 : créer un jeu multijoueur temps réel accessible depuis mobile, où les joueurs se dissimulent parmi 25 NPCs.</span></div>
+                                <div class="star-row"><span class="star-lbl">T</span><span>Permettre à plusieurs joueurs de contrôler leur personnage via smartphone sur un écran partagé, avec 8 effets Glitch aléatoires.</span></div>
+                                <div class="star-row"><span class="star-lbl">A</span><span>Architecture Node.js + Socket.io, moteur 3D Three.js custom avec 12 skins procéduraux et spatial hashing. Déployé via Docker.</span></div>
+                                <div class="star-row"><span class="star-lbl">R</span><span>Jeu déployé sur glitch-party.xyz avec effets aléatoires (glace, vitesse double, contrôles inversés, arène rétrécissante…).</span></div>
                             </div>
                         </div>
-                        <h3 class="card-title">Application de création de groupes</h3>
-                        <div class="card-star">
-                            <div class="star-row"><span class="star-lbl">S</span><span>L'IUT d'Orsay avait besoin d'automatiser la répartition des étudiants en groupes TD/TP, un processus alors manuel et source d'erreurs.</span></div>
-                            <div class="star-row"><span class="star-lbl">T</span><span>Concevoir une application complète (web + bureau) gérant les contraintes de disponibilité et de composition des groupes.</span></div>
-                            <div class="star-row"><span class="star-lbl">A</span><span>Développement en équipe avec méthodologie Agile : back-end Java, base de données SQL, interface web PHP/HTML/CSS, sprints réguliers et revues de code sur GitLab.</span></div>
-                            <div class="star-row"><span class="star-lbl">R</span><span>Application fonctionnelle livrée, permettant la génération automatique des groupes avec gestion des contraintes en quelques secondes.</span></div>
-                        </div>
-                        <ul class="card-tech">
-                            <li>Java</li>
-                            <li>PHP</li>
-                            <li>HTML/CSS</li>
-                            <li>SQL</li>
-                        </ul>
                     </article>
 
-                    <!-- Projet 2 -->
-                    <article class="project-card">
-                        <div class="card-top">
-                            <span class="card-date">2024 — 2025</span>
-                            <div class="card-links">
-                                <a href="#" aria-label="Voir le projet" title="Demo"><i class="fas fa-arrow-up-right-from-square"></i></a>
-                                <a href="#" aria-label="Code source" title="GitHub"><i class="fab fa-github"></i></a>
+                    <!-- Portfolio -->
+                    <article class="proj-card" data-category="perso">
+                        <div class="proj-img">
+                            <img src="assets/images/portfolio.png" alt="Portfolio Alexandre Wang" loading="lazy">
+                        </div>
+                        <div class="proj-body">
+                            <div class="proj-meta">
+                                <span class="proj-badge proj-badge--perso">Projet Personnel</span>
+                                <div class="proj-links">
+                                    <a href="https://github.com/NekoFly5/portfolio" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
+                                </div>
+                            </div>
+                            <h3 class="proj-title">Portfolio</h3>
+                            <p class="proj-desc">Ce portfolio : interface BIOS animée, écran de login, terminal interactif, fenêtres déplaçables et rendu 3D WebGL — entièrement en vanilla JS sans framework.</p>
+                            <ul class="proj-tags">
+                                <li>HTML5</li><li>CSS3</li><li>JavaScript</li><li>Three.js</li><li>WebGL</li>
+                            </ul>
+                            <button class="proj-more">Plus d'infos <i class="fas fa-chevron-right"></i></button>
+                            <div class="proj-star-panel">
+                                <div class="star-row"><span class="star-lbl">S</span><span>Concevoir un portfolio développeur original qui se distingue des templates classiques et reflète mes compétences techniques.</span></div>
+                                <div class="star-row"><span class="star-lbl">T</span><span>Créer une expérience immersive avec boot BIOS, login animé, terminal fonctionnel et fenêtres système draggables.</span></div>
+                                <div class="star-row"><span class="star-lbl">A</span><span>Développement 100% vanilla JS : Three.js pour la scène 3D du hero, animations CSS avancées, terminal avec commandes interactives, cursor custom.</span></div>
+                                <div class="star-row"><span class="star-lbl">R</span><span>Portfolio complet, accessible en ligne, avec une identité visuelle forte et des interactions qui retiennent l'attention des recruteurs.</span></div>
                             </div>
                         </div>
-                        <h3 class="card-title">Jeu vidéo 2D en C++</h3>
-                        <div class="card-star">
-                            <div class="star-row"><span class="star-lbl">S</span><span>Projet de 1ère année BUT : développer un jeu vidéo complet en équipe, sans bibliothèque graphique externe imposée.</span></div>
-                            <div class="star-row"><span class="star-lbl">T</span><span>Créer un jeu 2D jouable avec animations fluides, détection de collisions et logique de niveaux progressifs.</span></div>
-                            <div class="star-row"><span class="star-lbl">A</span><span>Programmation orientée objet en C++, gestion des sprites, physique et boucle de jeu. Collaboration via Git et Code::Blocks avec répartition des tâches par module.</span></div>
-                            <div class="star-row"><span class="star-lbl">R</span><span>Jeu 2D complet et jouable livré en fin de semestre, démontrant la maîtrise de la POO et du travail collaboratif.</span></div>
-                        </div>
-                        <ul class="card-tech">
-                            <li>C++</li>
-                            <li>Git</li>
-                            <li>Code::Blocks</li>
-                        </ul>
                     </article>
 
-                    <!-- Projet 3 -->
-                    <article class="project-card">
-                        <div class="card-top">
-                            <span class="card-date">2024 — 2025</span>
-                            <div class="card-links">
-                                <a href="#" aria-label="Voir le projet" title="Demo"><i class="fas fa-arrow-up-right-from-square"></i></a>
-                                <a href="#" aria-label="Code source" title="GitHub"><i class="fab fa-github"></i></a>
+                    <!-- Transverse CIUP -->
+                    <article class="proj-card" data-category="scolaire">
+                        <div class="proj-img proj-img--placeholder proj-img--transverse">
+                            <span>CIUP</span>
+                        </div>
+                        <div class="proj-body">
+                            <div class="proj-meta">
+                                <span class="proj-badge proj-badge--scolaire">Projet Scolaire</span>
+                                <div class="proj-links">
+                                    <a href="https://github.com/NekoFly5/Transverse" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
+                                </div>
+                            </div>
+                            <h3 class="proj-title">Gestion CIUP — Application Java</h3>
+                            <p class="proj-desc">Application de bureau pour gérer la Cité Internationale Universitaire de Paris : maisons nationales, inscription étudiants, RestoU et services. Architecture MVC stricte.</p>
+                            <ul class="proj-tags">
+                                <li>Java</li><li>Swing</li><li>MVC</li><li>JUnit</li><li>Git</li>
+                            </ul>
+                            <button class="proj-more">Plus d'infos <i class="fas fa-chevron-right"></i></button>
+                            <div class="proj-star-panel">
+                                <div class="star-row"><span class="star-lbl">S</span><span>Projet transverse BUT 2 en équipe de 4 : modéliser et administrer la CIUP avec ses maisons, étudiants et services.</span></div>
+                                <div class="star-row"><span class="star-lbl">T</span><span>Développer une application de bureau permettant la gestion complète des maisons nationales et la consultation des services.</span></div>
+                                <div class="star-row"><span class="star-lbl">A</span><span>Architecture MVC en Java avec interface Swing, tests unitaires JUnit et modélisation UML. Collaboration via Git.</span></div>
+                                <div class="star-row"><span class="star-lbl">R</span><span>Application fonctionnelle avec navigation entre 5 maisons, gestion des capacités et menus hebdomadaires du RestoU.</span></div>
                             </div>
                         </div>
-                        <h3 class="card-title">Site web responsive</h3>
-                        <div class="card-star">
-                            <div class="star-row"><span class="star-lbl">S</span><span>SAÉ de 1ère année BUT : intégrer une maquette en respectant des critères stricts d'accessibilité et d'ergonomie.</span></div>
-                            <div class="star-row"><span class="star-lbl">T</span><span>Produire un site consultable sur tous les supports (mobile, tablette, desktop) sans framework CSS.</span></div>
-                            <div class="star-row"><span class="star-lbl">A</span><span>Développement HTML/CSS pur avec media queries, flexbox et animations CSS. Respect des contrastes WCAG et sémantique HTML5.</span></div>
-                            <div class="star-row"><span class="star-lbl">R</span><span>Site fonctionnel et validé sur tous les supports, bien noté pour la qualité du code et le respect des standards web.</span></div>
-                        </div>
-                        <ul class="card-tech">
-                            <li>HTML</li>
-                            <li>CSS</li>
-                            <li>Responsive</li>
-                        </ul>
                     </article>
 
-                    <!-- Projet 4 -->
-                    <article class="project-card">
-                        <div class="card-top">
-                            <span class="card-date">2024 — 2025</span>
-                            <div class="card-links">
-                                <a href="#" aria-label="Voir le projet" title="Demo"><i class="fas fa-arrow-up-right-from-square"></i></a>
-                                <a href="#" aria-label="Code source" title="GitHub"><i class="fab fa-github"></i></a>
+                    <!-- Gestion de Groupe -->
+                    <article class="proj-card" data-category="scolaire">
+                        <div class="proj-img">
+                            <img src="assets/images/gestiongroupe.webp" alt="Application de création de groupes" loading="lazy">
+                        </div>
+                        <div class="proj-body">
+                            <div class="proj-meta">
+                                <span class="proj-badge proj-badge--scolaire">Projet Scolaire</span>
+                                <div class="proj-links">
+                                    <a href="https://projets.iut-orsay.fr/saes3-awang1/accueil" target="_blank" rel="noopener noreferrer" title="Demo"><i class="fas fa-arrow-up-right-from-square"></i></a>
+                                    <a href="https://github.com/NekoFly5/Gestion-de-Groupe" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
+                                </div>
+                            </div>
+                            <h3 class="proj-title">Application de création de groupes</h3>
+                            <p class="proj-desc">Automatisation de la répartition des étudiants en groupes TD/TP pour l'IUT d'Orsay. Back-end Java, base SQL, interface web PHP — développé en méthode Agile.</p>
+                            <ul class="proj-tags">
+                                <li>Java</li><li>PHP</li><li>HTML/CSS</li><li>SQL</li>
+                            </ul>
+                            <button class="proj-more">Plus d'infos <i class="fas fa-chevron-right"></i></button>
+                            <div class="proj-star-panel">
+                                <div class="star-row"><span class="star-lbl">S</span><span>L'IUT d'Orsay avait besoin d'automatiser la répartition des étudiants en groupes TD/TP, un processus manuel et source d'erreurs.</span></div>
+                                <div class="star-row"><span class="star-lbl">T</span><span>Concevoir une application complète (web + bureau) gérant les contraintes de disponibilité et de composition des groupes.</span></div>
+                                <div class="star-row"><span class="star-lbl">A</span><span>Développement Agile : back-end Java, base de données SQL, interface web PHP/HTML/CSS, sprints réguliers et revues de code.</span></div>
+                                <div class="star-row"><span class="star-lbl">R</span><span>Application fonctionnelle livrée, génération automatique des groupes avec gestion des contraintes en quelques secondes.</span></div>
                             </div>
                         </div>
-                        <h3 class="card-title">Configuration Réseau &amp; Firewall</h3>
-                        <div class="card-star">
-                            <div class="star-row"><span class="star-lbl">S</span><span>TP réseau en BUT Informatique : mise en situation d'un administrateur système devant sécuriser une infrastructure multi-sous-réseaux.</span></div>
-                            <div class="star-row"><span class="star-lbl">T</span><span>Configurer et sécuriser un réseau complet avec isolation des zones et contrôle du trafic entrant/sortant.</span></div>
-                            <div class="star-row"><span class="star-lbl">A</span><span>Mise en place de règles iptables, NAT, VLANs et filtrage applicatif sur routeurs Linux. Rédaction d'une politique de sécurité réseau documentée.</span></div>
-                            <div class="star-row"><span class="star-lbl">R</span><span>Infrastructure sécurisée et opérationnelle, avec isolation effective des zones et blocage des flux non autorisés.</span></div>
-                        </div>
-                        <ul class="card-tech">
-                            <li>Linux</li>
-                            <li>Réseau</li>
-                            <li>Sécurité</li>
-                        </ul>
                     </article>
+
+                    <!-- Jeu 2D -->
+                    <article class="proj-card" data-category="scolaire">
+                        <div class="proj-img">
+                            <img src="assets/images/jeu2d.gif" alt="Jeu vidéo 2D en C++" loading="lazy">
+                        </div>
+                        <div class="proj-body">
+                            <div class="proj-meta">
+                                <span class="proj-badge proj-badge--scolaire">Projet Scolaire</span>
+                                <div class="proj-links">
+                                    <a href="https://github.com/NekoFly5/Jeu-2d" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
+                                </div>
+                            </div>
+                            <h3 class="proj-title">Jeu vidéo 2D en C++</h3>
+                            <p class="proj-desc">Jeu de plateforme/aventure 2D avec boucle de jeu, sprites animés, collisions et niveaux progressifs. Rendu via SDL2, architecture orientée objet en C++17.</p>
+                            <ul class="proj-tags">
+                                <li>C++17</li><li>SDL2</li><li>Git</li><li>Makefile</li>
+                            </ul>
+                            <button class="proj-more">Plus d'infos <i class="fas fa-chevron-right"></i></button>
+                            <div class="proj-star-panel">
+                                <div class="star-row"><span class="star-lbl">S</span><span>Projet de 1ère année BUT : développer un jeu vidéo complet en équipe avec rendu graphique via SDL2.</span></div>
+                                <div class="star-row"><span class="star-lbl">T</span><span>Créer un jeu 2D jouable avec animations fluides, détection de collisions et niveaux progressifs chargés depuis des fichiers de config.</span></div>
+                                <div class="star-row"><span class="star-lbl">A</span><span>Architecture POO en C++17 avec SDL2/SDL2_image, gestion des sprites via spritesheet, dictionnaire de ressources centralisé. Compilation via Makefile.</span></div>
+                                <div class="star-row"><span class="star-lbl">R</span><span>Jeu 2D complet livré en fin de semestre, avec coffres, collectibles et plusieurs niveaux fonctionnels.</span></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Café Éphémère CWAD -->
+                    <article class="proj-card" data-category="scolaire">
+                        <div class="proj-img proj-img--placeholder proj-img--cwad">
+                            <span>Café Éphémère</span>
+                        </div>
+                        <div class="proj-body">
+                            <div class="proj-meta">
+                                <span class="proj-badge proj-badge--scolaire">Projet Scolaire</span>
+                                <div class="proj-links">
+                                    <a href="https://nekofly5.github.io/CWAD/" target="_blank" rel="noopener noreferrer" title="Demo"><i class="fas fa-arrow-up-right-from-square"></i></a>
+                                    <a href="https://github.com/NekoFly5/CWAD" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
+                                </div>
+                            </div>
+                            <h3 class="proj-title">Café Éphémère — Site responsive</h3>
+                            <p class="proj-desc">Site multi-pages pour un café thématique parisien (thème changeant chaque mois). HTML5/CSS3 pur, design responsive, accessibilité WCAG. Déployé sur GitHub Pages.</p>
+                            <ul class="proj-tags">
+                                <li>HTML5</li><li>CSS3</li><li>Responsive</li><li>GitHub Pages</li>
+                            </ul>
+                            <button class="proj-more">Plus d'infos <i class="fas fa-chevron-right"></i></button>
+                            <div class="proj-star-panel">
+                                <div class="star-row"><span class="star-lbl">S</span><span>SAÉ CWAD de 1ère année BUT : concevoir un site pour un café thématique immersif parisien dont le décor change chaque mois.</span></div>
+                                <div class="star-row"><span class="star-lbl">T</span><span>Produire un site multi-pages consultable sur tous les supports sans framework CSS, avec critères stricts d'accessibilité.</span></div>
+                                <div class="star-row"><span class="star-lbl">A</span><span>HTML5/CSS3 pur avec media queries, flexbox, animations CSS, contrastes WCAG et intégration vidéo de fond. Déployé GitHub Pages.</span></div>
+                                <div class="star-row"><span class="star-lbl">R</span><span>Site validé sur tous les supports, bien noté pour la qualité du code et le respect des standards web.</span></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Réseau & Firewall -->
+                    <article class="proj-card" data-category="scolaire">
+                        <div class="proj-img">
+                            <img src="assets/images/projet reseau.webp" alt="Configuration Réseau et Firewall" loading="lazy">
+                        </div>
+                        <div class="proj-body">
+                            <div class="proj-meta">
+                                <span class="proj-badge proj-badge--scolaire">Projet Scolaire</span>
+                                <div class="proj-links"></div>
+                            </div>
+                            <h3 class="proj-title">Configuration Réseau &amp; Firewall</h3>
+                            <p class="proj-desc">Mise en situation d'administrateur système : sécurisation d'une infrastructure multi-sous-réseaux avec règles iptables, NAT, VLANs et filtrage applicatif sur Linux.</p>
+                            <ul class="proj-tags">
+                                <li>Linux</li><li>iptables</li><li>NAT</li><li>VLANs</li><li>Sécurité</li>
+                            </ul>
+                            <button class="proj-more">Plus d'infos <i class="fas fa-chevron-right"></i></button>
+                            <div class="proj-star-panel">
+                                <div class="star-row"><span class="star-lbl">S</span><span>TP réseau BUT Informatique : mise en situation d'admin système devant sécuriser une infrastructure multi-sous-réseaux.</span></div>
+                                <div class="star-row"><span class="star-lbl">T</span><span>Configurer et sécuriser un réseau complet avec isolation des zones et contrôle du trafic entrant/sortant.</span></div>
+                                <div class="star-row"><span class="star-lbl">A</span><span>Règles iptables, NAT, VLANs et filtrage applicatif sur routeurs Linux. Rédaction d'une politique de sécurité réseau documentée.</span></div>
+                                <div class="star-row"><span class="star-lbl">R</span><span>Infrastructure sécurisée et opérationnelle, isolation effective des zones et blocage des flux non autorisés.</span></div>
+                            </div>
+                        </div>
+                    </article>
+
                 </div>
             </div>
         </section>
@@ -476,8 +581,10 @@
                         </div>
                     </div>
                     <div class="skill-group">
-                        <h3 class="skill-group-title"><i class="fas fa-screwdriver-wrench"></i> Outils</h3>
+                        <h3 class="skill-group-title"><i class="fas fa-screwdriver-wrench"></i> Outils &amp; Frameworks</h3>
                         <div class="tag-cloud">
+                            <span class="tag">Node.js</span>
+                            <span class="tag">Socket.io</span>
                             <span class="tag">Git</span>
                             <span class="tag">GitHub / GitLab</span>
                             <span class="tag">Docker</span>
@@ -637,7 +744,7 @@
                         rel="noopener noreferrer" class="c-link">
                         <i class="fab fa-linkedin"></i> LinkedIn
                     </a>
-                    <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="c-link">
+                    <a href="https://github.com/NekoFly5" target="_blank" rel="noopener noreferrer" class="c-link">
                         <i class="fab fa-github"></i> GitHub
                     </a>
                 </div>
@@ -651,7 +758,7 @@
         <div class="footer-inner">
             <p>Conçu &amp; développé par <a href="#hero">Alexandre Wang</a></p>
             <div class="footer-links">
-                <a href="https://github.com/" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <a href="https://github.com/NekoFly5" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                     <i class="fab fa-github"></i>
                 </a>
                 <a href="https://www.linkedin.com/in/alexandre-wang-008954309/" target="_blank"
@@ -665,7 +772,7 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="assets/js/script.js"></script>
 </body>
 
 </html>
