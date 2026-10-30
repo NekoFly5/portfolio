@@ -29,6 +29,8 @@
             art: Array.from(scene.querySelectorAll('.project-visual, .hero-art'))
         }));
         const simpleRevealTargets = Array.from(story.querySelectorAll('.project-visual, .scene-title, .hero-title, .contact-title, .body-copy, .journey-item, .skill-row'));
+        const entranceTargets = scenes.map(scene => Array.from(scene.querySelectorAll('.scene-inner > .eyebrow, .hero-title, .hero-intro, .hero-actions, .availability, .project-copy > *, .skills-title > *, .skill-row, .journey-copy > *, .contact-title, .contact-meta, .contact-email, .social-links')));
+        const dialogShell = dialog?.querySelector('.dialog-shell');
         const focusableSelector = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
         const fullClip = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
 
@@ -48,6 +50,21 @@
         let focusTimer = null;
         let revealObserver = null;
         let simpleRevealsEnabled = false;
+        let targetProgress = 0;
+        let renderedProgress = 0;
+        let progressNeedsSnap = true;
+        let lastFrameTime = 0;
+        let followNativeScroll = false;
+        let nativeScrollTimer = null;
+        let heroReady = false;
+        let heroEntrancePlayed = false;
+        const copyAnimations = new Map();
+        const cardAnimations = new Map();
+        const lastEntranceAt = new Map();
+        let dialogAnimation = null;
+        let dialogFrame = null;
+        let dialogPhase = 'closed';
+        let dialogVersion = 0;
 
         const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
         const ease = value => value * value * (3 - 2 * value);
@@ -60,6 +77,68 @@
         chapterLabel?.setAttribute('aria-live', 'off');
         progressBar?.setAttribute('aria-hidden', 'true');
         scenes.forEach(scene => scene.classList.add('is-revealed'));
+
+        function cancelAnimations(animations) {
+            animations.forEach(animation => animation.cancel());
+            animations.clear();
+        }
+
+        function trackedAnimation(target, keyframes, options, collection) {
+            if (typeof target.animate !== 'function') return;
+            collection.get(target)?.cancel();
+            const animation = target.animate(keyframes, options);
+            collection.set(target, animation);
+            animation.finished.then(() => {
+                if (collection.get(target) !== animation) return;
+                collection.delete(target);
+                animation.cancel();
+            }).catch(() => {});
+        }
+
+        function revealFocusedTarget(target) {
+            [copyAnimations, cardAnimations].forEach(collection => {
+                collection.forEach((animation, element) => {
+                    if (element !== target && !element.contains(target)) return;
+                    animation.cancel();
+                    collection.delete(element);
+                });
+            });
+            target.closest('.reveal-ready')?.classList.add('is-revealed');
+        }
+
+        function playEntrance(index) {
+            if (!cinematic || reducedMotion.matches || document.hidden || dialog?.open) return;
+            if (index === 0 && (!heroReady || heroEntrancePlayed)) return;
+            const now = performance.now();
+            // Crossing back and forth over a chapter boundary should not retrigger it.
+            if (now - (lastEntranceAt.get(index) ?? -Infinity) < 1400) return;
+            lastEntranceAt.set(index, now);
+            if (index === 0) heroEntrancePlayed = true;
+            entranceTargets[index].forEach((target, order) => {
+                if (target.contains(document.activeElement)) return;
+                const from = { opacity: 0.48, translate: '0 18px' };
+                const to = { opacity: 1, translate: '0 0' };
+                if (target.matches('h1, h2')) {
+                    from.clipPath = 'inset(0 0 12% 0)';
+                    to.clipPath = 'inset(0 0 0% 0)';
+                }
+                trackedAnimation(target, [from, to], {
+                    duration: target.matches('h1, h2') ? 700 : 620,
+                    delay: Math.min(order * 55, 275),
+                    easing: 'cubic-bezier(.18,.75,.25,1)',
+                    fill: 'backwards'
+                }, copyAnimations);
+            });
+        }
+
+        function releaseNativeNavigation() {
+            clearTimeout(nativeScrollTimer);
+            nativeScrollTimer = setTimeout(() => {
+                followNativeScroll = false;
+                progressNeedsSnap = true;
+                requestRender();
+            }, 160);
+        }
 
         function updateHash(index) {
             const hash = hashes[index] || scenes[index].id;
@@ -96,6 +175,7 @@
         function focusScene(index) {
             const heading = scenes[index]?.querySelector('[data-scene-title], h1, h2') || scenes[index];
             if (!heading) return;
+            revealFocusedTarget(heading);
             if (!heading.hasAttribute('tabindex')) heading.tabIndex = -1;
             heading.focus({ preventScroll: true });
         }
@@ -153,7 +233,12 @@
             }
             if (hash) updateHash(index);
             hashUpdatesEnabled = true;
-            window.scrollTo({ top, behavior: smooth && !reducedMotion.matches ? 'smooth' : 'instant' });
+            followNativeScroll = smooth && !reducedMotion.matches;
+            progressNeedsSnap = true;
+            lastFrameTime = 0;
+            clearTimeout(nativeScrollTimer);
+            if (followNativeScroll) releaseNativeNavigation();
+            window.scrollTo({ top, behavior: followNativeScroll ? 'smooth' : 'instant' });
             requestRender();
         }
 
@@ -161,6 +246,7 @@
             scenes.forEach((scene, index) => {
                 ['transform', 'opacity', 'clip-path', 'visibility', 'pointer-events', 'z-index'].forEach(property => scene.style.removeProperty(property));
                 scene.style.removeProperty('--scene-progress');
+                scene.classList.remove('is-moving');
                 scene.removeAttribute('aria-hidden');
                 scene.inert = false;
                 const inner = layers[index].inner;
@@ -197,10 +283,16 @@
 
         function refreshLayout(preserveChapter) {
             layoutDirty = false;
+            progressNeedsSnap = true;
+            lastFrameTime = 0;
             const nextMode = stageSize.matches && !reducedMotion.matches && !simpleView;
             const changed = cinematic !== nextMode;
             const previousIndex = Math.max(0, activeIndex);
-            if (changed) clearSceneStyles();
+            if (changed) {
+                cancelAnimations(copyAnimations);
+                clearSceneStyles();
+            }
+            if (reducedMotion.matches) cancelAnimations(copyAnimations);
             cinematic = nextMode;
             body.classList.toggle('is-cinematic', cinematic);
             body.classList.toggle('is-simple-mode', simpleView);
@@ -229,6 +321,7 @@
 
         function updateActive(index) {
             if (index === activeIndex) return;
+            cancelAnimations(copyAnimations);
             activeIndex = index;
             scenes.forEach((scene, sceneIndex) => {
                 const active = sceneIndex === index;
@@ -257,20 +350,34 @@
                 nextButton.setAttribute('aria-label', `Chapitre suivant : ${titles[index + 1] || ''}`);
             }
             if (hashUpdatesEnabled) updateHash(index);
+            playEntrance(index);
         }
 
-        function renderCinematic() {
-            storyTop = window.scrollY + story.getBoundingClientRect().top;
-            const progress = clamp((window.scrollY - storyTop) / step, 0, scenes.length - 1);
+        function renderCinematic(now) {
+            targetProgress = clamp((window.scrollY - storyTop) / step, 0, scenes.length - 1);
+            if (progressNeedsSnap || followNativeScroll || !initialized) {
+                renderedProgress = targetProgress;
+                progressNeedsSnap = false;
+            } else {
+                const gap = lastFrameTime ? now - lastFrameTime : 0;
+                const elapsed = gap > 0 && gap < 120 ? clamp(gap, 1, 40) : 16.67;
+                const difference = targetProgress - renderedProgress;
+                const catchup = difference * (1 - Math.exp(-elapsed / 85));
+                renderedProgress += clamp(catchup, -0.65, 0.65);
+                if (Math.abs(targetProgress - renderedProgress) < 0.0008) renderedProgress = targetProgress;
+            }
+            lastFrameTime = now;
+            const progress = renderedProgress;
             const base = Math.min(Math.floor(progress), scenes.length - 1);
             const local = progress - base;
-            // A complete chapter remains readable for 73% of each native scroll step.
-            const transition = base < scenes.length - 1 ? ease(clamp((local - 0.73) / 0.27)) : 0;
+            // Keep a generous reading pause, then let the wipe breathe over 36%.
+            const transition = base < scenes.length - 1 ? ease(clamp((local - 0.64) / 0.36)) : 0;
             const active = transition >= 0.52 ? base + 1 : base;
             scenes.forEach((scene, index) => {
                 const outgoing = index === base;
                 const incoming = index === base + 1 && transition > 0;
                 const visible = outgoing || incoming;
+                scene.classList.toggle('is-moving', visible && transition > 0);
                 scene.style.visibility = visible ? 'visible' : 'hidden';
                 scene.style.pointerEvents = index === active ? 'auto' : 'none';
                 scene.style.zIndex = incoming ? '2' : outgoing ? '1' : '0';
@@ -279,22 +386,23 @@
                 if (!visible) return;
                 if (outgoing) {
                     scene.style.clipPath = fullClip;
-                    scene.style.transform = `translate3d(0, ${(-transition * 5).toFixed(3)}vh, 0) scale(${(1 - transition * 0.035).toFixed(4)}) rotate(${(-transition * 0.45).toFixed(3)}deg)`;
+                    scene.style.transform = 'none';
                 } else {
-                    const topEdge = clamp(transition * 1.3) * 100;
-                    const bottomEdge = clamp(transition * 1.3 - 0.3) * 100;
+                    const topEdge = clamp(transition * 1.18) * 100;
+                    const bottomEdge = clamp(transition * 1.18 - 0.18) * 100;
                     scene.style.clipPath = `polygon(0 0, ${topEdge.toFixed(3)}% 0, ${bottomEdge.toFixed(3)}% 100%, 0 100%)`;
-                    scene.style.transform = `translate3d(${((1 - transition) * 2.5).toFixed(3)}vw, ${((1 - transition) * 8).toFixed(3)}vh, 0) scale(${(1.045 - transition * 0.045).toFixed(4)}) rotate(${((1 - transition) * 0.65).toFixed(3)}deg)`;
+                    scene.style.transform = `translate3d(${((1 - transition) * 1.2).toFixed(3)}vw, ${((1 - transition) * 4.5).toFixed(3)}vh, 0)`;
                 }
                 const inner = layers[index].inner;
                 if (inner) {
-                    inner.style.transform = `translate3d(0, ${(outgoing ? -transition * 1.7 : (1 - transition) * 3).toFixed(3)}vh, 0)`;
+                    inner.style.transform = transition ? `translate3d(0, ${(outgoing ? -transition * 0.8 : (1 - transition) * 1.5).toFixed(3)}vh, 0)` : 'none';
                     inner.style.opacity = String(outgoing ? 1 - transition * 0.22 : 0.7 + transition * 0.3);
                 }
                 layers[index].art.forEach((art, artIndex) => {
                     const depth = 1 + artIndex * 0.12;
                     const travel = outgoing ? clamp(local) : -(1 - transition);
-                    art.style.transform = `translate3d(${(incoming ? (1 - transition) * 1.8 * depth : 0).toFixed(3)}vw, ${(-travel * 4 * depth).toFixed(3)}vh, 0) scale(${(1 + Math.abs(travel) * 0.025).toFixed(4)}) rotate(${(travel * 0.4).toFixed(3)}deg)`;
+                    const y = Math.round(-travel * window.innerHeight * 0.027 * depth);
+                    art.style.transform = `translate3d(0, ${y}px, 0)`;
                 });
             });
             updateActive(active);
@@ -326,25 +434,46 @@
             }
         }
 
-        function render() {
+        function render(now = performance.now()) {
             frame = null;
-            if (document.hidden) return;
+            if (document.hidden || dialog?.open) return;
             if (layoutDirty) refreshLayout(true);
-            if (cinematic) renderCinematic();
+            if (cinematic) renderCinematic(now);
             else renderSimple();
-            if (focusDestination && activeIndex === focusDestination.index && Math.abs(window.scrollY - focusDestination.top) < 5) {
+            const focusSettled = !cinematic || Math.abs(renderedProgress - focusDestination?.index) < 0.012;
+            if (focusDestination && focusSettled && activeIndex === focusDestination.index && Math.abs(window.scrollY - focusDestination.top) < 5) {
                 const index = focusDestination.index;
                 clearPendingFocus();
                 focusScene(index);
             }
             initialized = true;
+            if (activeIndex === 0 && heroReady && !heroEntrancePlayed) playEntrance(0);
+            if (cinematic && Math.abs(targetProgress - renderedProgress) >= 0.0008) requestRender();
         }
 
         function requestRender() {
-            if (frame === null && !document.hidden) frame = window.requestAnimationFrame(render);
+            if (frame === null && !document.hidden && !dialog?.open) frame = window.requestAnimationFrame(render);
         }
 
-        function setFilter(value) {
+        function animateArchiveCards() {
+            cancelAnimations(cardAnimations);
+            if (reducedMotion.matches || document.hidden || !dialog?.open) return;
+            archiveCards.filter(card => !card.hidden).forEach((card, index) => {
+                if (card.contains(document.activeElement)) return;
+                trackedAnimation(card, [
+                    { opacity: 0.6, translate: '0 10px' },
+                    { opacity: 1, translate: '0 0' }
+                ], {
+                    duration: 240,
+                    delay: Math.min(index * 25, 125),
+                    easing: 'cubic-bezier(.2,.75,.25,1)',
+                    fill: 'backwards'
+                }, cardAnimations);
+            });
+        }
+
+        function setFilter(value, animate = false) {
+            cancelAnimations(cardAnimations);
             const selected = value || 'all';
             filters.forEach(button => {
                 const active = button.dataset.filter === selected;
@@ -353,16 +482,109 @@
             });
             archiveCards.forEach(card => {
                 card.hidden = selected !== 'all' && !card.dataset.category.split(/\s+/).includes(selected);
+                if (card.hidden && card.contains(document.activeElement)) filters.find(button => button.dataset.filter === selected)?.focus({ preventScroll: true });
             });
+            if (animate) animateArchiveCards();
+        }
+
+        function cancelDialogAnimation() {
+            if (dialogFrame !== null) cancelAnimationFrame(dialogFrame);
+            dialogFrame = null;
+            dialogAnimation?.cancel();
+            dialogAnimation = null;
+        }
+
+        function animateDialogOpen() {
+            const version = ++dialogVersion;
+            cancelDialogAnimation();
+            dialogPhase = 'open';
+            dialog.classList.remove('is-closing', 'is-open');
+            if (reducedMotion.matches || document.hidden || !dialogShell || typeof dialogShell.animate !== 'function') {
+                dialog.classList.remove('is-opening');
+                dialog.classList.add('is-open');
+                return;
+            }
+            dialog.classList.add('is-opening');
+            dialogFrame = requestAnimationFrame(() => {
+                dialogFrame = null;
+                if (version !== dialogVersion || !dialog.open || dialogPhase !== 'open') return;
+                dialog.classList.remove('is-opening');
+                dialog.classList.add('is-open');
+            });
+            const animation = dialogShell.animate([
+                { opacity: 0.65, translate: '0 20px' },
+                { opacity: 1, translate: '0 0' }
+            ], { duration: 320, easing: 'cubic-bezier(.16,.8,.24,1)' });
+            dialogAnimation = animation;
+            animation.finished.then(() => {
+                if (dialogAnimation !== animation) return;
+                dialogAnimation = null;
+                animation.cancel();
+            }).catch(() => {});
+        }
+
+        function closeArchive({ instant = false } = {}) {
+            if (!dialog?.open || (dialogPhase === 'closing' && !instant)) return;
+            const version = ++dialogVersion;
+            const style = dialogShell ? getComputedStyle(dialogShell) : null;
+            const from = {
+                opacity: style?.opacity || '1',
+                translate: style?.translate && style.translate !== 'none' ? style.translate : '0 0'
+            };
+            cancelDialogAnimation();
+            cancelAnimations(cardAnimations);
+            if (instant || reducedMotion.matches || document.hidden || !dialogShell || typeof dialogShell.animate !== 'function') {
+                dialog.close();
+                return;
+            }
+            dialogPhase = 'closing';
+            dialog.classList.remove('is-opening', 'is-open');
+            dialog.classList.add('is-closing');
+            const animation = dialogShell.animate([
+                from, { opacity: 0, translate: '0 12px' }
+            ], { duration: 180, easing: 'cubic-bezier(.4,0,.8,.3)', fill: 'forwards' });
+            dialogAnimation = animation;
+            animation.finished.then(() => {
+                if (version === dialogVersion && dialogPhase === 'closing' && dialog.open) dialog.close();
+            }).catch(() => {});
+        }
+
+        function finishArchiveClose() {
+            if (dialogPhase === 'closed') return;
+            ++dialogVersion;
+            cancelDialogAnimation();
+            cancelAnimations(cardAnimations);
+            dialogPhase = 'closed';
+            dialog.classList.remove('is-opening', 'is-open', 'is-closing');
+            body.style.overflow = originalOverflow;
+            if (archiveOpener?.isConnected && archiveOpener.getClientRects().length && !archiveOpener.closest('[inert]')) archiveOpener.focus({ preventScroll: true });
+            else if (archiveOpener && mobileNav?.contains(archiveOpener) && menuToggle?.getClientRects().length && !menuToggle.closest('[inert]')) menuToggle.focus({ preventScroll: true });
+            else focusScene(Math.max(0, activeIndex));
+            archiveOpener = null;
+            progressNeedsSnap = true;
+            lastFrameTime = 0;
+            requestRender();
         }
 
         function openArchive(opener) {
-            if (!dialog || dialog.open || typeof dialog.showModal !== 'function') return;
+            if (!dialog || typeof dialog.showModal !== 'function') return;
+            if (dialog.open) {
+                if (dialogPhase === 'closing') animateDialogOpen();
+                return;
+            }
+            // A native close event can still be queued when code reopens the dialog.
+            if (dialogPhase !== 'closed') finishArchiveClose();
             archiveOpener = opener;
             closeMenu(false);
             clearPendingFocus();
+            cancelAnimations(copyAnimations);
+            if (frame !== null) cancelAnimationFrame(frame);
+            frame = null;
+            clearTimeout(nativeScrollTimer);
+            followNativeScroll = false;
             setFilter('all');
             originalOverflow = body.style.overflow;
+            dialog.classList.add('is-opening');
             dialog.showModal();
             body.style.overflow = 'hidden';
             const title = document.getElementById('archiveTitle');
@@ -370,6 +592,8 @@
                 if (!title.hasAttribute('tabindex')) title.tabIndex = -1;
                 title.focus({ preventScroll: true });
             } else dialog.querySelector('[data-close-dialog]')?.focus({ preventScroll: true });
+            animateDialogOpen();
+            animateArchiveCards();
         }
 
         menuToggle?.addEventListener('click', () => menuOpen ? closeMenu(true) : openMenu());
@@ -396,12 +620,12 @@
                 return;
             }
             if (event.target.closest('[data-close-dialog]')) {
-                dialog?.close();
+                closeArchive();
                 return;
             }
             const filter = event.target.closest('[data-filter]');
             if (filter) {
-                setFilter(filter.dataset.filter);
+                setFilter(filter.dataset.filter, true);
                 return;
             }
             const anchor = event.target.closest('a[href^="#"]');
@@ -437,26 +661,32 @@
         });
 
         if (dialog) {
+            dialog.addEventListener('cancel', event => {
+                if (reducedMotion.matches || !dialogShell || typeof dialogShell.animate !== 'function') return;
+                event.preventDefault();
+                closeArchive();
+            });
             dialog.addEventListener('close', () => {
-                body.style.overflow = originalOverflow;
-                if (archiveOpener?.isConnected && archiveOpener.getClientRects().length && !archiveOpener.closest('[inert]')) archiveOpener.focus({ preventScroll: true });
-                else if (archiveOpener && mobileNav?.contains(archiveOpener) && menuToggle?.getClientRects().length && !menuToggle.closest('[inert]')) menuToggle.focus({ preventScroll: true });
-                else focusScene(Math.max(0, activeIndex));
-                archiveOpener = null;
-                requestRender();
+                if (!dialog.open) finishArchiveClose();
             });
             dialog.addEventListener('click', event => {
                 if (event.target !== dialog) return;
                 const bounds = dialog.getBoundingClientRect();
-                if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
+                if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) closeArchive();
             });
         }
 
+        document.addEventListener('focusin', event => {
+            if (event.target instanceof Element) revealFocusedTarget(event.target);
+        });
+
         window.addEventListener('scroll', () => {
             hashUpdatesEnabled = initialized;
+            if (followNativeScroll) releaseNativeNavigation();
             requestRender();
         }, { passive: true });
         window.addEventListener('resize', () => {
+            progressNeedsSnap = true;
             layoutDirty = true;
             requestRender();
         }, { passive: true });
@@ -465,15 +695,36 @@
             if (index !== null) navigate(index, { smooth: false, hash: false });
         });
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden && frame !== null) {
-                cancelAnimationFrame(frame);
+            if (document.hidden) {
+                if (frame !== null) cancelAnimationFrame(frame);
                 frame = null;
+                cancelAnimations(copyAnimations);
+                cancelAnimations(cardAnimations);
+                if (dialogPhase === 'closing') closeArchive({ instant: true });
+                else if (dialog?.open) {
+                    cancelDialogAnimation();
+                    dialog.classList.remove('is-opening');
+                    dialog.classList.add('is-open');
+                }
+                clearTimeout(nativeScrollTimer);
+                followNativeScroll = false;
+                progressNeedsSnap = true;
+                lastFrameTime = 0;
             } else if (!document.hidden) {
                 layoutDirty = true;
                 requestRender();
             }
         });
         const changedPreference = () => {
+            cancelAnimations(copyAnimations);
+            cancelAnimations(cardAnimations);
+            if (reducedMotion.matches && dialogPhase === 'closing') closeArchive({ instant: true });
+            else if (reducedMotion.matches && dialog?.open) {
+                cancelDialogAnimation();
+                dialog.classList.remove('is-opening');
+                dialog.classList.add('is-open');
+            }
+            progressNeedsSnap = true;
             layoutDirty = true;
             requestRender();
         };
@@ -487,6 +738,15 @@
         render();
         const initialScene = indexForHash(window.location.hash);
         if (initialScene !== null) navigate(initialScene, { smooth: false, hash: false });
+        const heroImage = scenes[0].querySelector('.hero-art img');
+        const imageReady = heroImage && typeof heroImage.decode === 'function'
+            ? heroImage.decode()
+            : Promise.resolve();
+        // Text stays in the document immediately; readiness only starts its flourish.
+        Promise.allSettled([document.fonts?.ready || Promise.resolve(), imageReady]).then(() => {
+            heroReady = true;
+            requestRender();
+        });
         window.addEventListener('load', () => {
             layoutDirty = true;
             requestRender();

@@ -396,7 +396,7 @@ body.is-cinematic .scene {
     height:100%;
     opacity:0;
     pointer-events:none;
-    will-change:opacity,transform
+    will-change:auto
 }
 body.is-cinematic .scene.is-active {
     opacity:1;
@@ -3439,5 +3439,433 @@ body.is-menu-open {
     }
     body:not(.is-cinematic) .story-status:has(#motionToggle:disabled) {
         display:none
+    }
+}
+
+/* Motion polish: JS owns the cinematic timeline and entrance transforms. */
+:root {
+    --motion-quick: 160ms;
+    --motion-ui: 280ms;
+    --motion-slow: 560ms;
+    --ease-out: cubic-bezier(.16, 1, .3, 1);
+    --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+    --ease-press: cubic-bezier(.2, .75, .25, 1);
+}
+
+html {
+    scrollbar-gutter: stable;
+}
+
+body.is-cinematic .scene.is-moving {
+    will-change: opacity, transform;
+}
+
+/* The JS progress value is already smoothed once. */
+.story-progress > span {
+    transition: none;
+}
+
+.desktop-nav button {
+    transition: color var(--motion-quick) ease-out;
+}
+
+.desktop-nav button::after {
+    transition: transform var(--motion-ui) var(--ease-out);
+}
+
+.desktop-nav button[aria-current="location"] {
+    color: var(--acid);
+}
+
+.desktop-nav button[aria-current="location"]::after {
+    transform: scaleX(1);
+}
+
+.chapter-rail button {
+    transition: opacity var(--motion-ui) ease-out;
+}
+
+.chapter-rail button::after {
+    transition:
+        transform 360ms var(--ease-out),
+        background-color var(--motion-quick) ease-out,
+        border-color var(--motion-quick) ease-out;
+}
+
+.chapter-rail button[aria-current="location"] {
+    opacity: 1;
+}
+
+.chapter-rail button[aria-current="location"]::after {
+    background: currentColor;
+    transform: rotate(45deg) scale(1.4);
+}
+
+.rail-label {
+    transition:
+        opacity 180ms ease-out,
+        transform var(--motion-ui) var(--ease-out);
+}
+
+.chapter-rail button:focus-visible .rail-label {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Independent translate/scale leave the JS entrance transform untouched. */
+.button,
+.cv-link {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    translate: 0 0;
+    scale: 1;
+    transition:
+        translate var(--motion-ui) var(--ease-out),
+        scale var(--motion-quick) var(--ease-press),
+        color var(--motion-ui) ease-out,
+        background-color var(--motion-ui) ease-out,
+        border-color var(--motion-ui) ease-out,
+        box-shadow var(--motion-ui) var(--ease-out);
+}
+
+.button::before,
+.cv-link::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -1px -35%;
+    pointer-events: none;
+    background: linear-gradient(
+        105deg,
+        transparent 25%,
+        rgba(241, 241, 232, .24) 48%,
+        transparent 70%
+    );
+    transform: translateX(-100%);
+    transition: transform 640ms var(--ease-out);
+}
+
+.button.primary:hover,
+.button.ghost:hover {
+    transform: none;
+}
+
+.button > span,
+.cv-link > span,
+.contact-email > span,
+.archive-links a > span {
+    display: inline-block;
+    translate: 0 0;
+    transition: translate 320ms var(--ease-out);
+}
+
+.button:focus-visible,
+.cv-link:focus-visible {
+    translate: 0 -2px;
+}
+
+.button:focus-visible::before,
+.cv-link:focus-visible::before {
+    transform: translateX(100%);
+}
+
+.button:focus-visible > span,
+.cv-link:focus-visible > span,
+.contact-email:focus-visible > span,
+.archive-links a:focus-visible > span {
+    translate: 3px -3px;
+}
+
+.button:active,
+.cv-link:active {
+    translate: 0 0;
+    scale: .975;
+    transition-duration: 90ms;
+}
+
+/* A line grows from its reading direction without changing the layout. */
+.social-links a,
+.archive-links a,
+.header-actions > button[data-open-archive],
+.contact-footer button {
+    position: relative;
+    text-decoration: none;
+}
+
+.social-links a::after,
+.archive-links a::after,
+.header-actions > button[data-open-archive]::after,
+.contact-footer button::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 7px;
+    left: 0;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 340ms var(--ease-out);
+    pointer-events: none;
+}
+
+.archive-links a::after {
+    bottom: -1px;
+}
+
+.social-links a:hover {
+    text-decoration: none;
+}
+
+.social-links a:focus-visible::after,
+.archive-links a:focus-visible::after,
+.header-actions > button[data-open-archive]:focus-visible::after,
+.contact-footer button:focus-visible::after {
+    transform: scaleX(1);
+}
+
+.contact-email {
+    transition: border-color var(--motion-ui) ease-out;
+}
+
+.contact-email:hover {
+    gap: clamp(15px, 4vw, 65px);
+}
+
+/* Keep the archive's images in their frames; the card itself belongs to WAAPI. */
+.archive-image {
+    transition: box-shadow var(--motion-slow) var(--ease-out);
+}
+
+.archive-image img {
+    translate: 0 0;
+    scale: 1;
+    transition:
+        translate 640ms var(--ease-out),
+        scale 640ms var(--ease-out),
+        filter 640ms var(--ease-out);
+}
+
+.archive-card:hover .archive-image img {
+    transform: none;
+}
+
+.archive-detail summary > span {
+    transition: transform var(--motion-ui) var(--ease-out);
+}
+
+.archive-toolbar button {
+    transition:
+        color var(--motion-quick) ease-out,
+        border-color var(--motion-ui) ease-out;
+}
+
+.dialog-close > span {
+    rotate: 0deg;
+    transition: rotate var(--motion-ui) var(--ease-out);
+}
+
+#projectDialog::backdrop {
+    opacity: 0;
+    transition: opacity 240ms ease-out;
+}
+
+#projectDialog.is-open::backdrop {
+    opacity: 1;
+}
+
+#projectDialog.is-closing::backdrop {
+    opacity: 0;
+    transition-duration: 180ms;
+    transition-timing-function: ease-in;
+}
+
+/* Hover is reserved for a mouse or trackpad. Touch keeps the press feedback. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .button:hover,
+    .cv-link:hover {
+        translate: 0 -2px;
+    }
+
+    .button:hover::before,
+    .cv-link:hover::before {
+        transform: translateX(100%);
+    }
+
+    .button:hover > span,
+    .cv-link:hover > span,
+    .contact-email:hover > span,
+    .archive-links a:hover > span {
+        translate: 3px -3px;
+    }
+
+    .button:active,
+    .cv-link:active {
+        translate: 0 0;
+    }
+
+    .social-links a:hover::after,
+    .archive-links a:hover::after,
+    .header-actions > button[data-open-archive]:hover::after,
+    .contact-footer button:hover::after {
+        transform: scaleX(1);
+    }
+
+    .archive-card:hover .archive-image img {
+        translate: 0 -1%;
+        scale: 1.045;
+        filter: saturate(1.04);
+    }
+
+    .archive-card:hover .archive-image {
+        box-shadow: 0 12px 28px rgba(0, 0, 0, .24);
+    }
+
+    .dialog-close:hover > span,
+    .dialog-close:focus-visible > span {
+        rotate: 90deg;
+    }
+
+    .hero-stamp {
+        rotate: 0deg;
+        transition: rotate 640ms var(--ease-out);
+    }
+
+    .hero-stamp:hover {
+        rotate: 5deg;
+    }
+
+    .crosshair {
+        scale: 1;
+        transition: scale var(--motion-ui) var(--ease-out);
+    }
+
+    .crosshair:hover {
+        scale: 1.16;
+    }
+}
+
+@media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
+    body.is-menu-open .mobile-nav {
+        animation: menu-panel-enter 180ms var(--ease-out) both;
+    }
+
+    body.is-menu-open .mobile-nav > button {
+        animation: menu-item-enter 280ms var(--ease-out) both;
+    }
+
+    body.is-menu-open .mobile-nav > button:nth-child(1) { animation-delay: 20ms; }
+    body.is-menu-open .mobile-nav > button:nth-child(2) { animation-delay: 40ms; }
+    body.is-menu-open .mobile-nav > button:nth-child(3) { animation-delay: 60ms; }
+    body.is-menu-open .mobile-nav > button:nth-child(4) { animation-delay: 80ms; }
+    body.is-menu-open .mobile-nav > button:nth-child(5) { animation-delay: 100ms; }
+    body.is-menu-open .mobile-nav > button:nth-child(6) { animation-delay: 120ms; }
+}
+
+@keyframes menu-panel-enter {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes menu-item-enter {
+    from { opacity: 0; translate: 0 8px; }
+    to { opacity: 1; translate: 0 0; }
+}
+
+@media (hover: none), (pointer: coarse) {
+    .button.primary:hover {
+        background: var(--acid);
+        border-color: var(--acid);
+        color: var(--ink);
+    }
+
+    .button.ghost:hover {
+        background: transparent;
+        border-color: rgba(241, 241, 232, .35);
+        color: var(--paper);
+    }
+
+    #scene-2 .button.primary:hover {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--paper);
+    }
+
+    #scene-2 .button.ghost:hover,
+    .skills-title .button:hover {
+        background: transparent;
+        border-color: rgba(17, 18, 16, .35);
+        color: var(--ink);
+    }
+
+    .cv-link:hover {
+        background: transparent;
+        border-color: rgba(241, 241, 232, .45);
+        color: var(--paper);
+    }
+}
+
+body:not(.is-cinematic) .reveal-ready:focus-within {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    transition: none !important;
+}
+
+@media (max-width: 900px) {
+    .contact-email:hover {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 580px) {
+    .contact-email:hover {
+        gap: 12px;
+    }
+}
+
+/* These overrides come last so later refinements cannot restore motion. */
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --motion-quick: 0ms;
+        --motion-ui: 0ms;
+        --motion-slow: 0ms;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0s !important;
+        animation-delay: 0s !important;
+        transition-duration: 0s !important;
+        transition-delay: 0s !important;
+    }
+
+    .button,
+    .cv-link,
+    .button > span,
+    .cv-link > span,
+    .contact-email > span,
+    .archive-links a > span,
+    .archive-image img,
+    .hero-stamp,
+    .crosshair {
+        translate: none !important;
+        scale: none !important;
+        rotate: none !important;
+    }
+
+    .button::before,
+    .cv-link::before {
+        display: none;
+    }
+
+    body.is-cinematic .scene.is-moving {
+        will-change: auto;
+    }
+
+    #projectDialog[open]::backdrop {
+        opacity: 1;
     }
 }
