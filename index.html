@@ -1,799 +1,153 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="assets/images/logo.png">
-    <title>Alexandre Wang — Développeur</title>
-    <meta name="description"
-        content="Portfolio d'Alexandre Wang, étudiant en BUT Informatique à l'IUT d'Orsay. Recherche un stage de 3 mois.">
-    <meta property="og:title" content="Alexandre Wang — Portfolio Développeur">
-    <meta property="og:description"
-        content="Étudiant BUT Informatique, Paris Saclay. Stage 3 mois — 20 avril au 10 juillet 2026.">
-    <meta property="og:type" content="website">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111210">
+  <title>Alexandre Wang — Développement & automatisation</title>
+  <meta name="description" content="Alexandre Wang, BUT 3 Informatique à l'IUT d'Orsay. Projets web et automatisation. Stage du 18 janvier au 14 mai 2027, en présentiel à Vitry-sur-Seine et dans les environs.">
+  <link rel="canonical" href="https://nekofly5.github.io/portfolio/">
+  <meta property="og:title" content="Alexandre Wang — Code. Crée. Déploie.">
+  <meta property="og:description" content="Développement web & automatisation. BUT 3 Informatique — Stage en présentiel du 18 janvier au 14 mai 2027.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nekofly5.github.io/portfolio/">
+  <meta property="og:image" content="https://nekofly5.github.io/portfolio/assets/images/hero-world.png">
+  <meta property="og:locale" content="fr_FR">
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;0,900;1,700;1,800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" href="assets/images/hero-world.png" as="image" fetchpriority="high">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script defer src="assets/js/script.js"></script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Alexandre Wang","url":"https://nekofly5.github.io/portfolio/","jobTitle":"Étudiant en BUT 3 Informatique","sameAs":["https://github.com/NekoFly5","https://www.linkedin.com/in/alexandre-wang-008954309/"]}</script>
 </head>
-
 <body>
-
-    <!-- Custom cursor -->
-    <div id="cursor-outer" class="cursor-outer"></div>
-    <div id="cursor-dot" class="cursor-dot"></div>
-
-    <!-- BIOS Boot Screen -->
-    <div id="bios-screen" class="bios-screen">
-        <div class="bios-scanlines"></div>
-        <div class="bios-inner">
-            <div class="bios-header">
-                <div class="bios-header-left">
-                    <span class="bios-logo">▓▒░ WANG<span class="bios-accent">TECH</span> ░▒▓</span>
-                    <span class="bios-version">BIOS v2026.1 — Release 2.0</span>
-                </div>
-                <div class="bios-header-right">
-                    <span class="bios-date" id="biosDate"></span>
-                </div>
-            </div>
-            <div class="bios-divider"></div>
-            <div class="bios-body">
-                <pre id="biosOutput"></pre>
-            </div>
-            <div class="bios-divider"></div>
-            <div class="bios-footer">
-                <div class="bios-keys">
-                    <span><kbd>DEL</kbd> Setup</span>
-                    <span><kbd>F2</kbd> BIOS Menu</span>
-                    <span><kbd>F12</kbd> Boot Menu</span>
-                    <span><kbd>ESC</kbd> Skip</span>
-                </div>
-                <span id="biosHint" class="bios-hint-text"></span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Login screen -->
-    <div id="login-screen" class="login-screen">
-        <div class="login-box">
-            <div class="login-header">
-                <div class="login-dots">
-                    <span class="ldot red"></span>
-                    <span class="ldot yellow"></span>
-                    <span class="ldot green"></span>
-                </div>
-                <span class="login-title">portfolio.exe</span>
-            </div>
-            <div class="login-body">
-                <div class="login-logo">AW_</div>
-                <p class="login-system">Alexandre Wang OS — v2026.1</p>
-
-                <div class="login-field" id="loginField1">
-                    <span class="field-label">login</span>
-                    <span class="field-val" id="fieldUser"></span>
-                    <span class="field-cursor" id="cursor1">|</span>
-                </div>
-                <div class="login-field login-field-hidden" id="loginField2">
-                    <span class="field-label">password</span>
-                    <span class="field-val" id="fieldPass"></span>
-                    <span class="field-cursor" id="cursor2">|</span>
-                </div>
-
-                <div class="login-status" id="loginStatus"></div>
-
-                <div class="login-bar-wrap" id="loginBarWrap">
-                    <div class="login-bar" id="loginBar"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Navigation -->
-    <nav id="nav" class="nav">
-        <div class="nav-inner">
-            <a href="#hero" class="nav-logo">Alexandre Wang</a>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#about" class="nav-link"><span>01</span> À propos</a></li>
-                <li><a href="#projects" class="nav-link"><span>02</span> Projets</a></li>
-                <li><a href="#skills" class="nav-link"><span>03</span> Compétences</a></li>
-                <li><a href="#experience" class="nav-link"><span>04</span> Expérience</a></li>
-                <li><a href="#ambitions" class="nav-link"><span>05</span> Ambitions</a></li>
-                <li><a href="#contact" class="nav-link"><span>06</span> Contact</a></li>
-            </ul>
-            <button class="burger" id="burger" aria-label="Menu">
-                <span></span><span></span><span></span>
-            </button>
-        </div>
+  <a href="#main" class="skip-link">Aller au contenu</a>
+  <header class="site-header">
+    <a class="logo" href="#scene-0" data-goto="0" aria-label="Alexandre Wang — accueil">AW<span aria-hidden="true">/</span></a>
+    <nav class="desktop-nav" aria-label="Navigation principale">
+      <button type="button" data-goto="0">Accueil</button><button type="button" data-goto="1">Projets</button><button type="button" data-goto="5">Parcours</button><button type="button" data-goto="6">Contact</button>
     </nav>
-
-    <!-- Mobile nav overlay -->
-    <div class="mobile-overlay" id="mobileOverlay"></div>
-    <nav class="mobile-nav" id="mobileNav">
-        <ul>
-            <li><a href="#about" class="mnav-link"><em>01</em> À propos</a></li>
-            <li><a href="#projects" class="mnav-link"><em>02</em> Projets</a></li>
-            <li><a href="#skills" class="mnav-link"><em>03</em> Compétences</a></li>
-            <li><a href="#experience" class="mnav-link"><em>04</em> Expérience</a></li>
-            <li><a href="#ambitions" class="mnav-link"><em>05</em> Ambitions</a></li>
-            <li><a href="#contact" class="mnav-link"><em>06</em> Contact</a></li>
-        </ul>
-    </nav>
-
-    <main>
-
-        <!-- ============================
-             HERO
-             ============================ -->
-        <section id="hero" class="hero">
-            <div id="three-bg"></div>
-            <div class="hero-inner">
-                <div class="hero-tag block">
-                    <span class="dot-pulse"></span>
-                    Disponible — Stage 20 avr. au 10 juil. 2026
-                </div>
-                <h1 class="hero-name">
-                    <span class="name-line block" data-delay="100">Alexandre</span>
-                    <span class="name-line name-line-2 block" data-delay="200">Wang<span class="accent">.</span></span>
-                </h1>
-                <div class="hero-subtitle block" data-delay="350">
-                    <span id="typedText"></span><span class="type-cursor">|</span>
-                </div>
-                <p class="hero-bio block" data-delay="500">
-                    Étudiant en <strong>BUT Informatique</strong> à l'IUT d'Orsay — Paris Saclay.
-                    Je conçois et développe des solutions qui mêlent rigueur technique
-                    et expérience utilisateur. Passionné, curieux, en quête de mon prochain défi.
-                </p>
-                <div class="hero-actions block" data-delay="650">
-                    <a href="#projects" class="btn-fill">Voir mes projets</a>
-                    <a href="#contact" class="btn-ghost">Me contacter</a>
-                    <a href="assets/docs/cv.pdf" download="CV_Alexandre_Wang.pdf" class="btn-cv">CV <i class="fas fa-download"></i></a>
-                </div>
-                <div class="hero-scroll block" data-delay="900">
-                    <a href="#about" aria-label="Défiler">
-                        <span class="scroll-arrow"></span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- ==============================
-                 DESKTOP WINDOWS (hero only)
-                 ============================== -->
-            <div id="deskWindows" class="desk-windows">
-
-                <!-- Terminal -->
-                <div class="win" id="winTerm">
-                    <div class="win-bar" id="barTerm">
-                        <div class="win-btns">
-                            <span class="wbtn wclose" data-win="winTerm" title="Fermer">×</span>
-                            <span class="wbtn wmin"   data-win="winTerm" title="Minimiser">−</span>
-                            <span class="wbtn wmax"   data-win="winTerm" title="Agrandir">⤢</span>
-                        </div>
-                        <div class="win-tabs">
-                            <span class="wtab active">Terminal</span>
-                            <span class="wtab" data-show="winSys">System</span>
-                            <span class="wtab" data-show="winTask">Tasks</span>
-                            <a href="#contact" class="wtab">Contact</a>
-                        </div>
-                    </div>
-                    <div class="win-body term-body">
-                        <div id="termLines" class="term-lines"></div>
-                        <div class="term-row" id="termRow">
-                            <span class="term-prompt">alexandre@portfolio:~$&nbsp;</span>
-                            <input id="termInput" type="text" autocomplete="off" spellcheck="false" />
-                        </div>
-                    </div>
-                </div>
-
-                <!-- System Monitor -->
-                <div class="win" id="winSys">
-                    <div class="win-bar" id="barSys">
-                        <div class="win-btns">
-                            <span class="wbtn wclose" data-win="winSys">×</span>
-                            <span class="wbtn wmin"   data-win="winSys">−</span>
-                            <span class="wbtn wmax"   data-win="winSys">⤢</span>
-                        </div>
-                        <span class="win-title">System Monitor</span>
-                    </div>
-                    <div class="win-body sysmon-body">
-                        <div class="smon-row">
-                            <span class="smon-lbl">CPU</span>
-                            <div class="smon-graph-wrap"><canvas id="cpuCanvas" width="160" height="36"></canvas></div>
-                            <span class="smon-val" id="cpuVal">0%</span>
-                        </div>
-                        <div class="smon-row">
-                            <span class="smon-lbl">RAM</span>
-                            <div class="smon-bar-wrap"><div class="smon-bar" id="ramBar"></div></div>
-                            <span class="smon-val" id="ramVal">0%</span>
-                        </div>
-                        <div class="smon-row">
-                            <span class="smon-lbl">NET</span>
-                            <div class="smon-graph-wrap"><canvas id="netCanvas" width="160" height="36"></canvas></div>
-                            <span class="smon-val" id="netVal">0 kb/s</span>
-                        </div>
-                        <div class="smon-stats">
-                            <div class="smon-stat"><span>OS</span><span>Alexandre-OS v2026.1</span></div>
-                            <div class="smon-stat"><span>KERNEL</span><span>portfolio-6.1.0</span></div>
-                            <div class="smon-stat"><span>UPTIME</span><span id="uptimeVal">00:00:00</span></div>
-                            <div class="smon-stat"><span>SHELL</span><span>portfolio.sh</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Task Manager -->
-                <div class="win" id="winTask">
-                    <div class="win-bar" id="barTask">
-                        <div class="win-btns">
-                            <span class="wbtn wclose" data-win="winTask">×</span>
-                            <span class="wbtn wmin"   data-win="winTask">−</span>
-                            <span class="wbtn wmax"   data-win="winTask">⤢</span>
-                        </div>
-                        <span class="win-title">Task Manager</span>
-                    </div>
-                    <div class="win-body task-body">
-                        <div class="task-head">
-                            <span>Process</span>
-                            <span>PID</span>
-                            <span>CPU</span>
-                            <span>MEM</span>
-                        </div>
-                        <div id="taskList"></div>
-                    </div>
-                </div>
-
-                <!-- Taskbar -->
-                <div class="taskbar" id="taskbar">
-                    <button class="tb-app" data-win="winTerm" title="Terminal">
-                        <i class="fas fa-terminal"></i>
-                        <span>Terminal</span>
-                    </button>
-                    <button class="tb-app" data-win="winSys" title="System Monitor">
-                        <i class="fas fa-chart-area"></i>
-                        <span>Monitor</span>
-                    </button>
-                    <button class="tb-app" data-win="winTask" title="Task Manager">
-                        <i class="fas fa-microchip"></i>
-                        <span>Tasks</span>
-                    </button>
-                </div>
-
-            </div><!-- /deskWindows -->
-
-        </section>
-
-        <!-- ============================
-             À PROPOS
-             ============================ -->
-        <section id="about" class="section">
-            <div class="section-curtain"></div>
-            <div class="section-inner">
-                <header class="section-header block">
-                    <span class="section-num">01</span>
-                    <h2 class="section-title">À propos de moi</h2>
-                    <div class="section-line"></div>
-                </header>
-
-                <div class="about-grid">
-                    <div class="about-text">
-                        <p class="block" data-delay="0">
-                            Je m'appelle Alexandre, étudiant en deuxième année de
-                            <strong>BUT Informatique</strong> à l'IUT d'Orsay,
-                            Université Paris Saclay. Passionné par le développement logiciel,
-                            j'aime concevoir des solutions numériques concrètes et impactantes.
-                        </p>
-                        <p class="block" data-delay="80">
-                            Basé à <strong>Vitry-sur-Seine</strong>. Je parle couramment
-                            le <strong>français</strong> (natif), l'<strong>anglais</strong> (B1)
-                            et le <strong>chinois</strong> (C1). J'apprécie autant le travail
-                            en équipe que l'autonomie, avec une approche Agile.
-                        </p>
-                        <div class="about-skills block" data-delay="160">
-                            <p class="skills-label">Technologies que j'utilise :</p>
-                            <ul class="skills-two-col">
-                                <li>Java</li>
-                                <li>C++</li>
-                                <li>PHP</li>
-                                <li>HTML / CSS</li>
-                                <li>JavaScript</li>
-                                <li>SQL</li>
-                                <li>Git &amp; GitHub</li>
-                                <li>Docker</li>
-                            </ul>
-                        </div>
-                        <div class="parcours block" data-delay="240">
-                            <div class="parcours-item">
-                                <span class="p-date">2024 — 2027</span>
-                                <span class="p-info">BUT Informatique — IUT d'Orsay, Paris Saclay</span>
-                            </div>
-                            <div class="parcours-item">
-                                <span class="p-date">2021 — 2024</span>
-                                <span class="p-info">BAC STI2D — Lycée Adolphe Chérioux</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="about-avatar block block-right" data-delay="100">
-                        <div class="avatar-frame">
-                            <div class="avatar-img">
-                                <img src="assets/images/Photo.jpg" alt="Alexandre Wang" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
-                            </div>
-                        </div>
-                        <div class="about-langs">
-                            <div class="lang-item">
-                                <span class="lang-name">Français</span>
-                                <span class="lang-level">Natif</span>
-                            </div>
-                            <div class="lang-item">
-                                <span class="lang-name">Anglais</span>
-                                <span class="lang-level">B1</span>
-                            </div>
-                            <div class="lang-item">
-                                <span class="lang-name">Chinois</span>
-                                <span class="lang-level accent-text">C1</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============================
-             PROJETS
-             ============================ -->
-        <section id="projects" class="section section-dark">
-            <div class="section-curtain curtain-dark"></div>
-            <div class="section-inner">
-                <header class="section-header block">
-                    <span class="section-num">02</span>
-                    <h2 class="section-title">Projets</h2>
-                    <div class="section-line"></div>
-                </header>
-                <div class="proj-topbar block">
-                    <p class="section-sub">Travaux académiques &amp; personnels</p>
-                    <div class="proj-filters">
-                        <button class="proj-filter" data-filter="perso">Perso</button>
-                        <button class="proj-filter" data-filter="scolaire">Scolaire</button>
-                        <button class="proj-filter active" data-filter="all">Tous</button>
-                    </div>
-                </div>
-
-                <div class="projects-grid-v2">
-
-                    <!-- Glitch Party -->
-                    <article class="proj-card" data-category="scolaire" data-label="SEMESTRE 3 · 2025–2026">
-                        <div class="proj-img">
-                            <img src="assets/images/project-glitch-party.webp" alt="Glitch Party" loading="lazy">
-                        </div>
-                        <div class="proj-body">
-                            <div class="proj-meta">
-                                <span class="proj-badge proj-badge--scolaire">Projet Scolaire</span>
-                                <div class="proj-links">
-                                    <a href="https://glitch-party.xyz/game" target="_blank" rel="noopener noreferrer" title="Demo"><i class="fas fa-arrow-up-right-from-square"></i></a>
-                                </div>
-                            </div>
-                            <h3 class="proj-title">Glitch Party</h3>
-                            <p class="proj-desc">Jeu multijoueur temps réel sur mobile — les joueurs se dissimulent parmi 25 NPCs contrôlés par l'IA avec 8 effets Glitch aléatoires et 3 actions : Boost, Push, Blast.</p>
-                            <ul class="proj-tags">
-                                <li>Node.js</li><li>Socket.io</li><li>Three.js</li><li>Docker</li><li>JavaScript</li>
-                            </ul>
-                            <button class="proj-more">Plus d'infos <i class="fas fa-chevron-right"></i></button>
-                            <div class="proj-data" hidden>
-                                <div class="star-row"><span class="star-lbl">S</span><span>Projet universitaire en équipe de 3 : créer un jeu multijoueur temps réel accessible depuis mobile, où les joueurs se dissimulent parmi 25 NPCs.</span></div>
-                                <div class="star-row"><span class="star-lbl">T</span><span>Permettre à plusieurs joueurs de contrôler leur personnage via smartphone sur un écran partagé, avec 8 effets Glitch aléatoires.</span></div>
-                                <div class="star-row"><span class="star-lbl">A</span><span>Architecture Node.js + Socket.io, moteur 3D Three.js custom avec 12 skins procéduraux et spatial hashing. Déployé via Docker.</span></div>
-                                <div class="star-row"><span class="star-lbl">R</span><span>Jeu déployé sur glitch-party.xyz avec effets aléatoires (glace, vitesse double, contrôles inversés, arène rétrécissante…).</span></div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Portfolio -->
-                    <article class="proj-card" data-category="perso" data-label="PROJET PERSO">
-                        <div class="proj-img">
-                            <img src="assets/images/portfolio.png" alt="Portfolio Alexandre Wang" loading="lazy">
-                        </div>
-                        <div class="proj-body">
-                            <div class="proj-meta">
-                                <span class="proj-badge proj-badge--perso">Projet Personnel</span>
-                                <div class="proj-links">
-                                    <a href="https://github.com/NekoFly5/portfolio" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
-                                </div>
-                            </div>
-                            <h3 class="proj-title">Portfolio</h3>
-                            <p class="proj-desc">Ce portfolio : interface BIOS animée, écran de login, terminal interactif, fenêtres déplaçables et rendu 3D WebGL — entièrement en vanilla JS sans framework.</p>
-                            <ul class="proj-tags">
-                                <li>HTML5</li><li>CSS3</li><li>JavaScript</li><li>Three.js</li><li>WebGL</li>
-                            </ul>
-                            <button class="proj-more">Plus d'infos <i class="fas fa-chevron-right"></i></button>
-                            <div class="proj-data" hidden>
-                                <div class="star-row"><span class="star-lbl">S</span><span>Concevoir un portfolio développeur original qui se distingue des templates classiques et reflète mes compétences techniques.</span></div>
-                                <div class="star-row"><span class="star-lbl">T</span><span>Créer une expérience immersive avec boot BIOS, login animé, terminal fonctionnel et fenêtres système draggables.</span></div>
-                                <div class="star-row"><span class="star-lbl">A</span><span>Développement 100% vanilla JS : Three.js pour la scène 3D du hero, animations CSS avancées, terminal avec commandes interactives, cursor custom.</span></div>
-                                <div class="star-row"><span class="star-lbl">R</span><span>Portfolio complet, accessible en ligne, avec une identité visuelle forte et des interactions qui retiennent l'attention des recruteurs.</span></div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Transverse CIUP -->
-                    <article class="proj-card" data-category="scolaire" data-label="SEMESTRE 3 · 2025–2026">
-                        <div class="proj-img proj-img--placeholder proj-img--transverse">
-                            <span>CIUP</span>
-                        </div>
-                        <div class="proj-body">
-                            <div class="proj-meta">
-                                <span class="proj-badge proj-badge--scolaire">Projet Scolaire</span>
-                                <div class="proj-links">
-                                    <a href="https://github.com/NekoFly5/Transverse" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
-                                </div>
-                            </div>
-                            <h3 class="proj-title">Gestion CIUP — Application Java</h3>
-                            <p class="proj-desc">Application de bureau pour gérer la Cité Internationale Universitaire de Paris : maisons nationales, inscription étudiants, RestoU et services. Architecture MVC stricte.</p>
-                            <ul class="proj-tags">
-                                <li>Java</li><li>Swing</li><li>MVC</li><li>JUnit</li><li>Git</li>
-                            </ul>
-                            <button class="proj-more">Plus d'infos <i class="fas fa-chevron-right"></i></button>
-                            <div class="proj-data" hidden>
-                                <div class="star-row"><span class="star-lbl">S</span><span>Projet transverse BUT 2 en équipe de 4 : modéliser et administrer la CIUP avec ses maisons, étudiants et services.</span></div>
-                                <div class="star-row"><span class="star-lbl">T</span><span>Développer une application de bureau permettant la gestion complète des maisons nationales et la consultation des services.</span></div>
-                                <div class="star-row"><span class="star-lbl">A</span><span>Architecture MVC en Java avec interface Swing, tests unitaires JUnit et modélisation UML. Collaboration via Git.</span></div>
-                                <div class="star-row"><span class="star-lbl">R</span><span>Application fonctionnelle avec navigation entre 5 maisons, gestion des capacités et menus hebdomadaires du RestoU.</span></div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Gestion de Groupe -->
-                    <article class="proj-card" data-category="scolaire" data-label="SEMESTRE 3 · 2025–2026">
-                        <div class="proj-img">
-                            <img src="assets/images/gestiongroupe.webp" alt="Application de création de groupes" loading="lazy">
-                        </div>
-                        <div class="proj-body">
-                            <div class="proj-meta">
-                                <span class="proj-badge proj-badge--scolaire">Projet Scolaire</span>
-                                <div class="proj-links">
-                                    <a href="https://projets.iut-orsay.fr/saes3-awang1/accueil" target="_blank" rel="noopener noreferrer" title="Demo"><i class="fas fa-arrow-up-right-from-square"></i></a>
-                                    <a href="https://github.com/NekoFly5/Gestion-de-Groupe" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
-                                </div>
-                            </div>
-                            <h3 class="proj-title">Application de création de groupes</h3>
-                            <p class="proj-desc">Automatisation de la répartition des étudiants en groupes TD/TP pour l'IUT d'Orsay. Back-end Java, base SQL, interface web PHP — développé en méthode Agile.</p>
-                            <ul class="proj-tags">
-                                <li>Java</li><li>PHP</li><li>HTML/CSS</li><li>SQL</li>
-                            </ul>
-                            <button class="proj-more">Plus d'infos <i class="fas fa-chevron-right"></i></button>
-                            <div class="proj-data" hidden>
-                                <div class="star-row"><span class="star-lbl">S</span><span>L'IUT d'Orsay avait besoin d'automatiser la répartition des étudiants en groupes TD/TP, un processus manuel et source d'erreurs.</span></div>
-                                <div class="star-row"><span class="star-lbl">T</span><span>Concevoir une application complète (web + bureau) gérant les contraintes de disponibilité et de composition des groupes.</span></div>
-                                <div class="star-row"><span class="star-lbl">A</span><span>Développement Agile : back-end Java, base de données SQL, interface web PHP/HTML/CSS, sprints réguliers et revues de code.</span></div>
-                                <div class="star-row"><span class="star-lbl">R</span><span>Application fonctionnelle livrée, génération automatique des groupes avec gestion des contraintes en quelques secondes.</span></div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Jeu 2D -->
-                    <article class="proj-card" data-category="scolaire" data-label="SEMESTRE 1 · 2024–2025">
-                        <div class="proj-img">
-                            <img src="assets/images/jeu2d.gif" alt="Jeu vidéo 2D en C++" loading="lazy">
-                        </div>
-                        <div class="proj-body">
-                            <div class="proj-meta">
-                                <span class="proj-badge proj-badge--scolaire">Projet Scolaire</span>
-                                <div class="proj-links">
-                                    <a href="https://github.com/NekoFly5/Jeu-2d" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
-                                </div>
-                            </div>
-                            <h3 class="proj-title">Jeu vidéo 2D en C++</h3>
-                            <p class="proj-desc">Jeu de plateforme/aventure 2D avec boucle de jeu, sprites animés, collisions et niveaux progressifs. Rendu via SDL2, architecture orientée objet en C++17.</p>
-                            <ul class="proj-tags">
-                                <li>C++17</li><li>SDL2</li><li>Git</li><li>Makefile</li>
-                            </ul>
-                            <button class="proj-more">Plus d'infos <i class="fas fa-chevron-right"></i></button>
-                            <div class="proj-data" hidden>
-                                <div class="star-row"><span class="star-lbl">S</span><span>Projet de 1ère année BUT : développer un jeu vidéo complet en équipe avec rendu graphique via SDL2.</span></div>
-                                <div class="star-row"><span class="star-lbl">T</span><span>Créer un jeu 2D jouable avec animations fluides, détection de collisions et niveaux progressifs chargés depuis des fichiers de config.</span></div>
-                                <div class="star-row"><span class="star-lbl">A</span><span>Architecture POO en C++17 avec SDL2/SDL2_image, gestion des sprites via spritesheet, dictionnaire de ressources centralisé. Compilation via Makefile.</span></div>
-                                <div class="star-row"><span class="star-lbl">R</span><span>Jeu 2D complet livré en fin de semestre, avec coffres, collectibles et plusieurs niveaux fonctionnels.</span></div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Café Éphémère CWAD -->
-                    <article class="proj-card" data-category="scolaire" data-label="SEMESTRE 2 · 2024–2025">
-                        <div class="proj-img">
-                            <img src="assets/images/logo_cafe.png" alt="Café Éphémère" loading="lazy" class="proj-img-contain">
-                        </div>
-                        <div class="proj-body">
-                            <div class="proj-meta">
-                                <span class="proj-badge proj-badge--scolaire">Projet Scolaire</span>
-                                <div class="proj-links">
-                                    <a href="https://nekofly5.github.io/CWAD/" target="_blank" rel="noopener noreferrer" title="Demo"><i class="fas fa-arrow-up-right-from-square"></i></a>
-                                    <a href="https://github.com/NekoFly5/CWAD" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
-                                </div>
-                            </div>
-                            <h3 class="proj-title">Café Éphémère — Site responsive</h3>
-                            <p class="proj-desc">Site multi-pages pour un café thématique parisien (thème changeant chaque mois). HTML5/CSS3 pur, design responsive, accessibilité WCAG. Déployé sur GitHub Pages.</p>
-                            <ul class="proj-tags">
-                                <li>HTML5</li><li>CSS3</li><li>Responsive</li><li>GitHub Pages</li>
-                            </ul>
-                            <button class="proj-more">Plus d'infos <i class="fas fa-chevron-right"></i></button>
-                            <div class="proj-data" hidden>
-                                <div class="star-row"><span class="star-lbl">S</span><span>SAÉ CWAD de 1ère année BUT : concevoir un site pour un café thématique immersif parisien dont le décor change chaque mois.</span></div>
-                                <div class="star-row"><span class="star-lbl">T</span><span>Produire un site multi-pages consultable sur tous les supports sans framework CSS, avec critères stricts d'accessibilité.</span></div>
-                                <div class="star-row"><span class="star-lbl">A</span><span>HTML5/CSS3 pur avec media queries, flexbox, animations CSS, contrastes WCAG et intégration vidéo de fond. Déployé GitHub Pages.</span></div>
-                                <div class="star-row"><span class="star-lbl">R</span><span>Site validé sur tous les supports, bien noté pour la qualité du code et le respect des standards web.</span></div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Réseau & Firewall -->
-                    <article class="proj-card" data-category="scolaire" data-label="SEMESTRE 2 · 2024–2025">
-                        <div class="proj-img">
-                            <img src="assets/images/projet reseau.webp" alt="Configuration Réseau et Firewall" loading="lazy">
-                        </div>
-                        <div class="proj-body">
-                            <div class="proj-meta">
-                                <span class="proj-badge proj-badge--scolaire">Projet Scolaire</span>
-                                <div class="proj-links"></div>
-                            </div>
-                            <h3 class="proj-title">Configuration Réseau &amp; Firewall</h3>
-                            <p class="proj-desc">Mise en situation d'administrateur système : sécurisation d'une infrastructure multi-sous-réseaux avec règles iptables, NAT, VLANs et filtrage applicatif sur Linux.</p>
-                            <ul class="proj-tags">
-                                <li>Linux</li><li>iptables</li><li>NAT</li><li>VLANs</li><li>Sécurité</li>
-                            </ul>
-                            <button class="proj-more">Plus d'infos <i class="fas fa-chevron-right"></i></button>
-                            <div class="proj-data" hidden>
-                                <div class="star-row"><span class="star-lbl">S</span><span>TP réseau BUT Informatique : mise en situation d'admin système devant sécuriser une infrastructure multi-sous-réseaux.</span></div>
-                                <div class="star-row"><span class="star-lbl">T</span><span>Configurer et sécuriser un réseau complet avec isolation des zones et contrôle du trafic entrant/sortant.</span></div>
-                                <div class="star-row"><span class="star-lbl">A</span><span>Règles iptables, NAT, VLANs et filtrage applicatif sur routeurs Linux. Rédaction d'une politique de sécurité réseau documentée.</span></div>
-                                <div class="star-row"><span class="star-lbl">R</span><span>Infrastructure sécurisée et opérationnelle, isolation effective des zones et blocage des flux non autorisés.</span></div>
-                            </div>
-                        </div>
-                    </article>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- ============================
-             COMPÉTENCES
-             ============================ -->
-        <section id="skills" class="section">
-            <div class="section-curtain"></div>
-            <div class="section-inner">
-                <header class="section-header block">
-                    <span class="section-num">03</span>
-                    <h2 class="section-title">Compétences</h2>
-                    <div class="section-line"></div>
-                </header>
-
-                <div class="skills-grid stagger">
-                    <div class="skill-group">
-                        <h3 class="skill-group-title"><i class="fas fa-code"></i> Langages</h3>
-                        <div class="tag-cloud">
-                            <span class="tag">C++</span>
-                            <span class="tag">Java</span>
-                            <span class="tag">PHP</span>
-                            <span class="tag">HTML / CSS</span>
-                            <span class="tag">JavaScript</span>
-                            <span class="tag">SQL</span>
-                        </div>
-                    </div>
-                    <div class="skill-group">
-                        <h3 class="skill-group-title"><i class="fas fa-screwdriver-wrench"></i> Outils &amp; Frameworks</h3>
-                        <div class="tag-cloud">
-                            <span class="tag">Node.js</span>
-                            <span class="tag">Socket.io</span>
-                            <span class="tag">Git</span>
-                            <span class="tag">GitHub / GitLab</span>
-                            <span class="tag">Docker</span>
-                            <span class="tag">VS Code</span>
-                            <span class="tag">Penpot</span>
-                        </div>
-                    </div>
-                    <div class="skill-group">
-                        <h3 class="skill-group-title"><i class="fas fa-server"></i> Systèmes &amp; Méthodes</h3>
-                        <div class="tag-cloud">
-                            <span class="tag">Linux</span>
-                            <span class="tag">Windows</span>
-                            <span class="tag">Agile</span>
-                            <span class="tag">Réseau</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============================
-             EXPÉRIENCE
-             ============================ -->
-        <section id="experience" class="section section-dark">
-            <div class="section-curtain curtain-dark"></div>
-            <div class="section-inner">
-                <header class="section-header block">
-                    <span class="section-num">04</span>
-                    <h2 class="section-title">Expérience</h2>
-                    <div class="section-line"></div>
-                </header>
-
-                <div class="exp-list">
-                    <!-- Stage recherché -->
-                    <div class="exp-item exp-open block">
-                        <div class="exp-left">
-                            <span class="exp-badge">
-                                <span class="dot-pulse"></span> Disponible
-                            </span>
-                            <span class="exp-dates">20 Avr — 10 Juil 2026</span>
-                        </div>
-                        <div class="exp-right">
-                            <h3 class="exp-title">Votre entreprise ?</h3>
-                            <p class="exp-role">Stage de 3 mois — Développement informatique</p>
-                            <p class="exp-desc">Motivé et passionné, je recherche un stage de 3 mois pour mettre en pratique mes compétences en développement web et desktop dans un environnement professionnel stimulant.</p>
-                            <a href="#contact" class="btn-ghost btn-sm">Me contacter <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-
-                    <!-- Tang Frères -->
-                    <div class="exp-item block" data-delay="120">
-                        <div class="exp-left">
-                            <span class="exp-dates">Juil — Août 2023</span>
-                        </div>
-                        <div class="exp-right">
-                            <h3 class="exp-title">Tang Frères</h3>
-                            <p class="exp-role">Employé polyvalent</p>
-                            <ul class="exp-tasks">
-                                <li>Accueil et service client</li>
-                                <li>Préparation et gestion du rayon fruits &amp; légumes</li>
-                                <li>Gestion du stock</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============================
-             AMBITIONS
-             ============================ -->
-        <section id="ambitions" class="section section-dark">
-            <div class="section-curtain curtain-dark"></div>
-            <div class="section-inner">
-                <header class="section-header block">
-                    <span class="section-num">05</span>
-                    <h2 class="section-title">Projet professionnel &amp; Ambitions</h2>
-                    <div class="section-line"></div>
-                </header>
-
-                <div class="ambitions-grid stagger">
-                    <div class="ambition-card">
-                        <div class="ambition-term">Court terme</div>
-                        <div class="ambition-horizon">2026</div>
-                        <p>Décrocher un stage de 3 mois (20 avr. — 10 juil. 2026) dans le développement web ou logiciel. Mettre en pratique mes compétences dans un environnement professionnel réel, contribuer à un projet concret et développer ma capacité à travailler en entreprise.</p>
-                    </div>
-                    <div class="ambition-card">
-                        <div class="ambition-term">Moyen terme</div>
-                        <div class="ambition-horizon">2027 — 2029</div>
-                        <p>Obtenir le BUT Informatique en 2027, puis poursuivre en Master ou école d'ingénieurs spécialisée en développement logiciel ou génie informatique. Approfondir mes compétences en architecture logicielle et en développement fullstack.</p>
-                    </div>
-                    <div class="ambition-card">
-                        <div class="ambition-term">Long terme</div>
-                        <div class="ambition-horizon">2030+</div>
-                        <p>Devenir développeur fullstack ou software engineer dans une entreprise tech, idéalement sur des projets à fort impact utilisateur. Je suis également ouvert à l'entrepreneuriat et au développement de solutions personnelles.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============================
-             CENTRES D'INTÉRÊT
-             ============================ -->
-        <section id="interests" class="section">
-            <div class="section-curtain"></div>
-            <div class="section-inner">
-                <header class="section-header block">
-                    <span class="section-num">06</span>
-                    <h2 class="section-title">Centres d'intérêt</h2>
-                    <div class="section-line"></div>
-                </header>
-                <div class="interests-grid stagger">
-                    <div class="interest-card">
-                        <div class="interest-icon"><i class="fas fa-music"></i></div>
-                        <div class="interest-body">
-                            <span class="interest-title">Musique asiatique</span>
-                            <p class="interest-detail">Fan de K-pop, J-pop et mandopop depuis plusieurs années. Je suis régulièrement les sorties d'artistes comme Jay Chou ou BIGBANG, et j'explore différents genres allant du hip-hop au R&amp;B asiatique.</p>
-                        </div>
-                    </div>
-                    <div class="interest-card">
-                        <div class="interest-icon"><i class="fas fa-dragon"></i></div>
-                        <div class="interest-body">
-                            <span class="interest-title">Animation japonaise</span>
-                            <p class="interest-detail">Amateur de manga et d'animé depuis l'enfance, avec une préférence pour les genres shōnen et seinen. Au-delà du divertissement, j'apprécie la qualité narrative et le character design de séries comme Fullmetal Alchemist ou Vinland Saga.</p>
-                        </div>
-                    </div>
-                    <div class="interest-card">
-                        <div class="interest-icon"><i class="fas fa-code"></i></div>
-                        <div class="interest-body">
-                            <span class="interest-title">Développement &amp; Veille tech</span>
-                            <p class="interest-detail">Au-delà des cours, je réalise des projets personnels pour explorer de nouvelles technologies (ce portfolio en est un exemple). Je suis régulièrement des blogs tech et des chaînes YouTube pour maintenir une veille active sur les tendances du développement.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ============================
-             CONTACT
-             ============================ -->
-        <section id="contact" class="section contact-section">
-            <div class="section-inner contact-inner">
-                <span class="contact-num block">06</span>
-                <h2 class="contact-heading block" data-delay="80">On se parle ?</h2>
-                <p class="contact-sub block" data-delay="160">
-                    Je recherche un stage de 3 mois (20 avr. — 10 juil. 2026).
-                    Envoyez-moi un message — pour une opportunité ou juste pour échanger !
-                </p>
-                <a href="mailto:wlkalexandre55@gmail.com" class="btn-fill btn-xl block" data-delay="260">
-                    Dire bonjour <i class="fas fa-paper-plane"></i>
-                </a>
-                <div class="contact-links block" data-delay="360">
-                    <a href="tel:+33760330704" class="c-link">
-                        <i class="fas fa-phone"></i> 07 60 33 07 04
-                    </a>
-                    <a href="https://www.linkedin.com/in/alexandre-wang-008954309/" target="_blank"
-                        rel="noopener noreferrer" class="c-link">
-                        <i class="fab fa-linkedin"></i> LinkedIn
-                    </a>
-                    <a href="https://github.com/NekoFly5" target="_blank" rel="noopener noreferrer" class="c-link">
-                        <i class="fab fa-github"></i> GitHub
-                    </a>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- ============================
-         PROJECT MODAL
-         ============================ -->
-    <div id="projModal" class="pmodal-overlay" aria-hidden="true">
-        <div class="pmodal" role="dialog">
-            <div class="pmodal-header">
-                <span class="pmodal-label" id="pmodalLabel"></span>
-                <button class="pmodal-close" id="pmodalClose" aria-label="Fermer">×</button>
-            </div>
-            <h3 class="pmodal-title" id="pmodalTitle"></h3>
-            <div class="pmodal-star" id="pmodalStar"></div>
-            <div class="pmodal-bottom">
-                <div class="pmodal-stack">
-                    <span class="pmodal-stack-lbl">STACK</span>
-                    <ul class="pmodal-tags" id="pmodalTags"></ul>
-                </div>
-                <div class="pmodal-links" id="pmodalLinks"></div>
-            </div>
-        </div>
+    <div class="header-actions">
+      <button type="button" data-open-archive>Les 8 projets <span aria-hidden="true">↗</span></button>
+      <a href="assets/docs/cv.pdf" class="cv-link" target="_blank" rel="noopener noreferrer">Mon CV <span aria-hidden="true">↗</span></a>
+      <button type="button" class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileNav" aria-label="Ouvrir le menu"><span></span><span></span></button>
     </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-inner">
-            <p>Conçu &amp; développé par <a href="#hero">Alexandre Wang</a></p>
-            <div class="footer-links">
-                <a href="https://github.com/NekoFly5" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                    <i class="fab fa-github"></i>
-                </a>
-                <a href="https://www.linkedin.com/in/alexandre-wang-008954309/" target="_blank"
-                    rel="noopener noreferrer" aria-label="LinkedIn">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-                <a href="mailto:wlkalexandre55@gmail.com" aria-label="Email">
-                    <i class="fas fa-envelope"></i>
-                </a>
-            </div>
-        </div>
-    </footer>
-
-    <script src="assets/js/script.js"></script>
+  </header>
+  <nav class="mobile-nav" id="mobileNav" aria-label="Navigation mobile" hidden>
+    <button type="button" data-goto="0">Accueil</button><button type="button" data-goto="1">Projets</button><button type="button" data-goto="4">Compétences</button><button type="button" data-goto="5">Parcours</button><button type="button" data-goto="6">Contact</button>
+    <button type="button" data-open-archive>Les 8 projets <span aria-hidden="true">↗</span></button>
+  </nav>
+  <main id="main" tabindex="-1">
+    <div class="story" id="story">
+      <div class="stage" id="stage">
+        <section class="scene scene--hero" id="scene-0" data-scene="0" aria-labelledby="heroTitle">
+          <div class="hero-art" aria-hidden="true"><img src="assets/images/hero-world.png" alt="" width="1672" height="941" fetchpriority="high"><div class="hero-art-overlay"></div></div>
+          <div class="scene-inner">
+            <p class="eyebrow">Portfolio / Développeur / 2026—27</p>
+            <h1 class="hero-title" id="heroTitle">Alexandre<br><span class="outline-text">Wang<span class="title-dot">.</span></span></h1>
+            <div class="hero-intro"><p class="hero-role">Développement web<br>& automatisation.</p><p>Étudiant en BUT 3 Informatique à l'IUT d'Orsay.<br>J'aime transformer une idée en un projet qui fonctionne.</p></div>
+            <div class="hero-actions"><button type="button" class="button primary" data-goto="1">Explorer mes projets <span aria-hidden="true">↗</span></button><a class="button ghost" href="assets/docs/cv.pdf" target="_blank" rel="noopener noreferrer">Consulter mon CV <span aria-hidden="true">↗</span></a></div>
+            <div class="availability"><span class="availability-dot" aria-hidden="true"></span><p>Stage / <strong>18 janvier — 14 mai 2027</strong><br><span>Présentiel · Vitry-sur-Seine & environs</span></p></div>
+            <div class="hero-stamp" aria-hidden="true">CODE.<br>CRÉE.<br>DÉPLOIE.</div>
+            <p class="hero-coordinate" aria-hidden="true">AW—001 / START EXPLORING</p><div class="crosshair" aria-hidden="true">+</div>
+          </div>
+        </section>
+        <section class="scene scene--project" id="scene-1" data-scene="1" aria-labelledby="glitchTitle">
+          <div class="scene-inner project-layout">
+            <div class="project-copy"><p class="eyebrow">01 / Projet en équipe / Jeu multijoueur</p><h2 class="scene-title" id="glitchTitle">Glitch<br><span class="outline-text">Party.</span></h2><p class="project-kicker">Ton téléphone.<br>Ton personnage. Le chaos.</p><p class="body-copy">Un smartphone comme manette, un écran partagé et des effets aléatoires. Un jeu en temps réel, développé en équipe de trois et déployé avec Docker.</p><ul class="tag-list"><li>Node.js</li><li>Socket.IO</li><li>Three.js</li><li>Docker</li></ul><div class="project-actions"><a class="button primary" href="https://glitch-party.xyz/game" target="_blank" rel="noopener noreferrer">Lancer la démo <span aria-hidden="true">↗</span></a><button type="button" class="button ghost" data-open-archive>Voir les détails</button></div></div>
+            <div class="project-visual"><span class="project-index" aria-hidden="true">01</span><div class="project-image"><img src="assets/images/project-glitch-party.webp" alt="Vue de l'arène et des personnages de Glitch Party" width="1200" height="675"></div><p class="scene-meta">Temps réel / Équipe de 3 / Application web</p><span class="visual-caption" aria-hidden="true">PLAY / CONNECT / GLITCH</span></div>
+          </div>
+        </section>
+        <section class="scene scene--project" id="scene-2" data-scene="2" aria-labelledby="mailTitle">
+          <div class="scene-inner project-layout">
+            <div class="project-copy"><p class="eyebrow">02 / Projet personnel / Automatisation</p><h2 class="scene-title" id="mailTitle">Moins de mails.<br><span class="outline-text">Plus de clarté.</span></h2><p class="project-kicker">MailSummary</p><p class="body-copy">Une synthèse quotidienne des e-mails, produite par un workflow n8n et l'API Groq. Une interface web pour retrouver l'essentiel, automatiquement ou à la demande.</p><ul class="tag-list"><li>n8n</li><li>Groq</li><li>OAuth 2.0</li><li>Docker</li></ul><div class="project-actions"><a class="button primary" href="https://github.com/NekoFly5/email-dashboard" target="_blank" rel="noopener noreferrer">Explorer le code <span aria-hidden="true">↗</span></a><button type="button" class="button ghost" data-open-archive>Voir les détails</button></div></div>
+            <div class="project-visual"><span class="project-index" aria-hidden="true">02</span><div class="workflow-demo" aria-label="Workflow MailSummary : Gmail, n8n, Groq, puis une synthèse"><div class="flow-node"><span>01</span>Gmail</div><div class="flow-line" aria-hidden="true">↓</div><div class="flow-node"><span>02</span>n8n + Groq</div><div class="flow-line" aria-hidden="true">↓</div><div class="mail-summary"><div class="mail-summary-header"><span>SYNTHÈSE DU JOUR</span><span aria-hidden="true">✳</span></div><div class="mail-row"><span>À retenir</span><i aria-hidden="true"></i><i aria-hidden="true"></i></div><div class="mail-row"><span>À traiter</span><i aria-hidden="true"></i><i aria-hidden="true"></i></div></div></div><p class="scene-meta">Schéma du fonctionnement / Synchronisation planifiée</p></div>
+          </div>
+        </section>
+        <section class="scene scene--project" id="scene-3" data-scene="3" aria-labelledby="groupsTitle">
+          <div class="scene-inner project-layout">
+            <div class="project-copy"><p class="eyebrow">03 / Projet universitaire / Application de gestion</p><h2 class="scene-title" id="groupsTitle">Les bons<br><span class="outline-text">groupes.</span></h2><p class="project-kicker">Organiser. Répartir. Simplifier.</p><p class="body-copy">Une application pour répartir les étudiants en groupes de TD et de TP selon des contraintes définies. Back-end Java, base SQL, interface PHP et travail en méthode Agile.</p><ul class="tag-list"><li>Java</li><li>PHP</li><li>SQL</li><li>Agile</li></ul><div class="project-actions"><a class="button primary" href="https://github.com/NekoFly5/Gestion-de-Groupe" target="_blank" rel="noopener noreferrer">Explorer le code <span aria-hidden="true">↗</span></a><button type="button" class="button ghost" data-open-archive>Tous les projets <span aria-hidden="true">+5</span></button></div></div>
+            <div class="project-visual"><span class="project-index" aria-hidden="true">03</span><div class="project-image"><img src="assets/images/gestiongroupe.webp" alt="Interface de l'application de création de groupes étudiants" width="1200" height="675"></div><p class="scene-meta">IUT d'Orsay / Web & bureau / Contraintes de répartition</p><span class="visual-caption" aria-hidden="true">ORGANIZE / BUILD / DELIVER</span></div>
+          </div>
+        </section>
+        <section class="scene scene--skills" id="scene-4" data-scene="4" aria-labelledby="skillsTitle">
+          <div class="scene-inner skills-layout">
+            <div class="skills-title"><p class="eyebrow">04 / Ma boîte à outils</p><h2 class="scene-title" id="skillsTitle">Du code.<br><span class="outline-text">Au concret.</span></h2><p class="body-copy">Je relie le développement, l'automatisation et le déploiement. Chaque technologie prend son sens dans un projet.</p><button type="button" class="button ghost" data-open-archive>Voir les réalisations <span aria-hidden="true">↗</span></button></div>
+            <div class="skill-list"><div class="skill-row"><span class="skill-number">01</span><div class="skill-content"><h3>Développer</h3><p>Applications web, gestion et temps réel.</p><div class="skill-tags">JavaScript / Node.js / Java / PHP / SQL</div></div><span aria-hidden="true">↗</span></div><div class="skill-row"><span class="skill-number">02</span><div class="skill-content"><h3>Automatiser</h3><p>Workflows, services connectés et synthèse par IA.</p><div class="skill-tags">n8n / API Groq / OAuth 2.0 / Python</div></div><span aria-hidden="true">↗</span></div><div class="skill-row"><span class="skill-number">03</span><div class="skill-content"><h3>Déployer</h3><p>Versionner, tester et faire fonctionner ensemble.</p><div class="skill-tags">Docker / Nginx / Git / Linux / JUnit</div></div><span aria-hidden="true">↗</span></div><p class="scene-meta">Aussi : C++ / HTML & CSS / Réseau / Méthode Agile</p></div>
+          </div>
+        </section>
+        <section class="scene scene--journey" id="scene-5" data-scene="5" aria-labelledby="journeyTitle">
+          <div class="scene-inner journey-layout"><div class="portrait-wrap"><img src="assets/images/Photo.jpg" alt="Alexandre Wang" width="600" height="800" loading="lazy"><span class="portrait-caption">Alexandre Wang / Vitry-sur-Seine</span><span class="portrait-mark" aria-hidden="true">AW.</span></div><div class="journey-copy"><p class="eyebrow">05 / Derrière les projets</p><h2 class="scene-title" id="journeyTitle">Curieux.<br><span class="outline-text">Constructif.</span></h2><div class="journey-item"><p class="journey-date">2024 — 2027 / Formation</p><h3>BUT Informatique · IUT d'Orsay</h3><p>Université Paris-Saclay. En troisième année, parcours Déploiement d'applications communicantes et sécurisées.</p></div><div class="journey-item"><p class="journey-date">1er juin — 10 juillet 2026 / 6 semaines</p><h3>Agence USTS · Stage</h3><p>Conception de workflows n8n pour automatiser la génération de publicités par IA, en images et vidéos. Développement assisté par Claude Code.</p></div><div class="journey-item"><p class="journey-date">Juillet — août 2023 / Expérience</p><h3>Tang Frères · Employé polyvalent</h3><p>Accueil, service client, gestion du rayon fruits et légumes et des stocks.</p></div><p class="language-line">Français & chinois : natifs <span aria-hidden="true">/</span> Anglais : B1</p><p class="scene-meta">Hors écran : musique asiatique, animation japonaise & veille tech.</p></div></div>
+        </section>
+        <section class="scene scene--contact" id="scene-6" data-scene="6" aria-labelledby="contactTitle">
+          <div class="scene-inner contact-layout"><p class="eyebrow">06 / La suite s'écrit ensemble</p><h2 class="contact-title" id="contactTitle">Et si on<br>créait <span class="outline-text">la suite ?</span></h2><div class="contact-meta"><p>Je recherche un stage en développement web,<br>back-end ou automatisation.</p><p><strong>18 janvier — 14 mai 2027</strong><br>Entièrement en présentiel<br>Vitry-sur-Seine & environs</p></div><a class="contact-email" href="mailto:wlkalexandre55@gmail.com">wlkalexandre55@gmail.com <span aria-hidden="true">↗</span></a><div class="social-links"><a href="https://www.linkedin.com/in/alexandre-wang-008954309/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://github.com/NekoFly5" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="assets/docs/cv.pdf" target="_blank" rel="noopener noreferrer">Mon CV ↗</a><a href="tel:+33760330704">07 60 33 07 04</a></div><div class="contact-footer"><span>Conçu & développé par Alexandre Wang</span><button type="button" data-goto="0">Retour au début ↑</button></div></div>
+        </section>
+        <div class="scene-shutter" id="sceneShutter" aria-hidden="true"></div>
+      </div>
+    </div>
+  </main>
+  <nav class="chapter-rail" id="chapterRail" aria-label="Chapitres">
+    <button type="button" data-goto="0" aria-label="Accueil"><span class="rail-number">00</span><span class="rail-label">Intro</span></button><button type="button" data-goto="1" aria-label="Glitch Party"><span class="rail-number">01</span><span class="rail-label">Glitch</span></button><button type="button" data-goto="2" aria-label="MailSummary"><span class="rail-number">02</span><span class="rail-label">Mail</span></button><button type="button" data-goto="3" aria-label="Création de groupes"><span class="rail-number">03</span><span class="rail-label">Groupes</span></button><button type="button" data-goto="4" aria-label="Compétences"><span class="rail-number">04</span><span class="rail-label">Stack</span></button><button type="button" data-goto="5" aria-label="Mon parcours"><span class="rail-number">05</span><span class="rail-label">Parcours</span></button><button type="button" data-goto="6" aria-label="Me contacter"><span class="rail-number">06</span><span class="rail-label">Contact</span></button>
+  </nav>
+  <div class="story-status"><button type="button" class="scroll-cue" id="nextScene">Défiler pour explorer <span aria-hidden="true">↓</span></button><span class="current-chapter" id="currentChapter">00 / Intro</span><button type="button" id="motionToggle" aria-pressed="false">Lecture simple</button><div class="story-progress" aria-hidden="true"><span id="storyProgress"></span></div></div>
+  <dialog id="projectDialog" aria-labelledby="archiveTitle"><div class="dialog-shell"><header class="dialog-header"><div><p class="eyebrow">La collection complète</p><h2 id="archiveTitle" tabindex="-1">Mes 8 projets<span>.</span></h2></div><button type="button" class="dialog-close" data-close-dialog aria-label="Fermer la galerie">Fermer <span aria-hidden="true">×</span></button></header><div class="archive-toolbar" aria-label="Filtrer les projets"><button type="button" data-filter="all" aria-pressed="true">Tous / 8</button><button type="button" data-filter="perso" aria-pressed="false">Personnels / 2</button><button type="button" data-filter="scolaire" aria-pressed="false">Universitaires / 6</button></div><div class="archive-grid"><article class="archive-card" id="archive-projet-glitch" data-category="scolaire">
+      <div class="archive-image"><img src="assets/images/project-glitch-party.webp" alt="Glitch Party" loading="lazy" width="640" height="360"></div>
+      <div class="archive-content"><p class="eyebrow">SEMESTRE 3 · 2025–2026</p><h3 class="archive-title">Glitch Party</h3>
+      <p>Un smartphone pour contrôler son personnage, un écran partagé pour jouer. Jeu multijoueur en temps réel développé en équipe de trois et déployé avec Docker.</p><ul class="archive-tags"><li>Node.js</li><li>Socket.io</li><li>Three.js</li><li>Docker</li><li>JavaScript</li></ul>
+      <div class="archive-links"><a href="https://glitch-party.xyz/game" target="_blank" rel="noopener noreferrer">Voir le projet <span aria-hidden="true">↗</span></a></div>
+      <details class="archive-detail"><summary>Dans les détails <span aria-hidden="true">+</span></summary><p><strong>Contexte.</strong> Projet universitaire en équipe de 3 : créer un jeu multijoueur temps réel accessible depuis mobile, où les joueurs se dissimulent parmi 25 NPCs.</p><p><strong>Objectif.</strong> Permettre à plusieurs joueurs de contrôler leur personnage via smartphone sur un écran partagé, avec 8 effets Glitch aléatoires.</p><p><strong>Réalisation.</strong> Architecture Node.js et Socket.IO, rendu 3D avec Three.js et hachage spatial. Déploiement avec Docker.</p><p><strong>Résultat.</strong> Jeu déployé sur glitch-party.xyz avec effets aléatoires (glace, vitesse double, contrôles inversés, arène rétrécissante…).</p></details></div>
+    </article>
+<article class="archive-card" id="archive-projet-mailsummary" data-category="perso">
+      <div class="archive-image"><span aria-hidden="true">MAIL / IA</span></div>
+      <div class="archive-content"><p class="eyebrow">PROJET PERSO · 2026</p><h3 class="archive-title">MailSummary — résumé d&#x27;e-mails par IA</h3>
+      <p>Une synthèse quotidienne des e-mails dans une interface web. Workflows n8n, API Groq et intégration Gmail via OAuth 2.0, avec déclenchement planifié ou à la demande.</p><ul class="archive-tags"><li>n8n</li><li>Groq API</li><li>Docker</li><li>nginx</li><li>JavaScript</li></ul>
+      <div class="archive-links"><a href="https://github.com/NekoFly5/email-dashboard" target="_blank" rel="noopener noreferrer">Code source <span aria-hidden="true">↗</span></a></div>
+      <details class="archive-detail"><summary>Dans les détails <span aria-hidden="true">+</span></summary><p><strong>Contexte.</strong> Les e-mails s&#x27;accumulent et leur lecture quotidienne prend du temps : besoin d&#x27;un résumé automatique et centralisé chaque matin.</p><p><strong>Objectif.</strong> Construire un dashboard affichant le résumé IA des e-mails du jour, rafraîchi automatiquement à 8 h ou à la demande via webhook.</p><p><strong>Réalisation.</strong> Workflow n8n (Gmail API → résumé → LLaMA 3.3 70B via Groq API), interface servie par nginx, le tout orchestré avec Docker Compose. Fallback JSON si n8n est indisponible.</p><p><strong>Résultat.</strong> Outil fonctionnel : résumé JSON du jour accessible en un coup d&#x27;œil dans une interface web dédiée.</p></details></div>
+    </article>
+<article class="archive-card" id="archive-projet-groupes" data-category="scolaire">
+      <div class="archive-image"><img src="assets/images/gestiongroupe.webp" alt="Application de création de groupes" loading="lazy" width="640" height="360"></div>
+      <div class="archive-content"><p class="eyebrow">SEMESTRE 3 · 2025–2026</p><h3 class="archive-title">Application de création de groupes</h3>
+      <p>Automatisation de la répartition des étudiants en groupes TD/TP pour l&#x27;IUT d&#x27;Orsay. Back-end Java, base SQL, interface web PHP — développé en méthode Agile.</p><ul class="archive-tags"><li>Java</li><li>PHP</li><li>HTML/CSS</li><li>SQL</li></ul>
+      <div class="archive-links"><a href="https://projets.iut-orsay.fr/saes3-awang1/accueil" target="_blank" rel="noopener noreferrer">Voir le projet <span aria-hidden="true">↗</span></a><a href="https://github.com/NekoFly5/Gestion-de-Groupe" target="_blank" rel="noopener noreferrer">Code source <span aria-hidden="true">↗</span></a></div>
+      <details class="archive-detail"><summary>Dans les détails <span aria-hidden="true">+</span></summary><p><strong>Contexte.</strong> L&#x27;IUT d&#x27;Orsay avait besoin d&#x27;automatiser la répartition des étudiants en groupes TD/TP, un processus manuel et source d&#x27;erreurs.</p><p><strong>Objectif.</strong> Concevoir une application complète (web + bureau) gérant les contraintes de disponibilité et de composition des groupes.</p><p><strong>Réalisation.</strong> Développement Agile : back-end Java, base de données SQL, interface web PHP/HTML/CSS, sprints réguliers et revues de code.</p><p><strong>Résultat.</strong> Application web et de bureau permettant de créer des groupes de TD/TP selon les contraintes définies.</p></details></div>
+    </article>
+<article class="archive-card" id="archive-projet-ciup" data-category="scolaire">
+      <div class="archive-image"><span aria-hidden="true">CIUP / JAVA</span></div>
+      <div class="archive-content"><p class="eyebrow">SEMESTRE 3 · 2025–2026</p><h3 class="archive-title">Gestion CIUP — Application Java</h3>
+      <p>Application de bureau réalisée en équipe de quatre pour gérer les maisons, étudiants et services de la Cité internationale universitaire de Paris. Java Swing, MVC et tests JUnit.</p><ul class="archive-tags"><li>Java</li><li>Swing</li><li>MVC</li><li>JUnit</li><li>Git</li></ul>
+      <div class="archive-links"><a href="https://github.com/NekoFly5/Transverse" target="_blank" rel="noopener noreferrer">Code source <span aria-hidden="true">↗</span></a></div>
+      <details class="archive-detail"><summary>Dans les détails <span aria-hidden="true">+</span></summary><p><strong>Contexte.</strong> Projet transverse BUT 2 en équipe de 4 : modéliser et administrer la CIUP avec ses maisons, étudiants et services.</p><p><strong>Objectif.</strong> Développer une application de bureau pour gérer les maisons, étudiants et services de la CIUP.</p><p><strong>Réalisation.</strong> Architecture MVC en Java avec interface Swing, tests unitaires JUnit et modélisation UML. Collaboration via Git.</p><p><strong>Résultat.</strong> Application fonctionnelle avec navigation entre 5 maisons, gestion des capacités et menus hebdomadaires du RestoU.</p></details></div>
+    </article>
+<article class="archive-card" id="archive-projet-portfolio" data-category="perso">
+      <div class="archive-image"><img src="assets/images/portfolio-cinematic.png" alt="Portfolio" loading="lazy" width="640" height="360"></div>
+      <div class="archive-content"><p class="eyebrow">PROJET PERSO</p><h3 class="archive-title">Portfolio</h3>
+      <p>Portfolio conçu comme une succession de scènes : transitions pilotées par le défilement, direction artistique originale et galerie de projets.</p><ul class="archive-tags"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Animation</li></ul>
+      <div class="archive-links"><a href="https://github.com/NekoFly5/portfolio" target="_blank" rel="noopener noreferrer">Code source <span aria-hidden="true">↗</span></a></div>
+      <details class="archive-detail"><summary>Dans les détails <span aria-hidden="true">+</span></summary><p><strong>Contexte.</strong> Présenter mon parcours et mes réalisations dans une expérience inspirée des sites de jeux et d&#x27;anime.</p><p><strong>Objectif.</strong> Associer une navigation immersive à un accès direct aux informations utiles pour un recrutement.</p><p><strong>Réalisation.</strong> Scènes épinglées et transitions synchronisées au défilement en JavaScript natif ; illustration originale, navigation clavier et lecture simple.</p><p><strong>Résultat.</strong> Une présentation des projets, du parcours, du CV et des coordonnées, adaptée aux petits écrans et aux préférences de mouvement réduit.</p></details></div>
+    </article>
+<article class="archive-card" id="archive-projet-jeu2d" data-category="scolaire">
+      <div class="archive-image"><img src="assets/images/jeu2d.gif" alt="Jeu vidéo 2D en C++" loading="lazy" width="640" height="360"></div>
+      <div class="archive-content"><p class="eyebrow">SEMESTRE 1 · 2024–2025</p><h3 class="archive-title">Jeu vidéo 2D en C++</h3>
+      <p>Jeu de plateforme/aventure 2D avec boucle de jeu, sprites animés, collisions et niveaux progressifs. Rendu via SDL2, architecture orientée objet en C++17.</p><ul class="archive-tags"><li>C++17</li><li>SDL2</li><li>Git</li><li>Makefile</li></ul>
+      <div class="archive-links"><a href="https://github.com/NekoFly5/Jeu-2d" target="_blank" rel="noopener noreferrer">Code source <span aria-hidden="true">↗</span></a></div>
+      <details class="archive-detail"><summary>Dans les détails <span aria-hidden="true">+</span></summary><p><strong>Contexte.</strong> Projet de 1ère année BUT : développer un jeu vidéo complet en équipe avec rendu graphique via SDL2.</p><p><strong>Objectif.</strong> Créer un jeu 2D jouable avec animations fluides, détection de collisions et niveaux progressifs chargés depuis des fichiers de config.</p><p><strong>Réalisation.</strong> Architecture POO en C++17 avec SDL2/SDL2_image, gestion des sprites via spritesheet, dictionnaire de ressources centralisé. Compilation via Makefile.</p><p><strong>Résultat.</strong> Jeu 2D complet livré en fin de semestre, avec coffres, collectibles et plusieurs niveaux fonctionnels.</p></details></div>
+    </article>
+<article class="archive-card" id="archive-projet-cafe" data-category="scolaire">
+      <div class="archive-image"><img src="assets/images/logo_cafe.png" alt="Café Éphémère — Site responsive" loading="lazy" width="640" height="360"></div>
+      <div class="archive-content"><p class="eyebrow">SEMESTRE 2 · 2024–2025</p><h3 class="archive-title">Café Éphémère — Site responsive</h3>
+      <p>Site responsive de plusieurs pages pour un café thématique, réalisé en HTML et CSS et déployé sur GitHub Pages.</p><ul class="archive-tags"><li>HTML5</li><li>CSS3</li><li>Responsive</li><li>GitHub Pages</li></ul>
+      <div class="archive-links"><a href="https://nekofly5.github.io/CWAD/" target="_blank" rel="noopener noreferrer">Voir le projet <span aria-hidden="true">↗</span></a><a href="https://github.com/NekoFly5/CWAD" target="_blank" rel="noopener noreferrer">Code source <span aria-hidden="true">↗</span></a></div>
+      <details class="archive-detail"><summary>Dans les détails <span aria-hidden="true">+</span></summary><p><strong>Contexte.</strong> SAÉ CWAD de 1ère année BUT : concevoir un site pour un café thématique immersif parisien dont le décor change chaque mois.</p><p><strong>Objectif.</strong> Produire un site de plusieurs pages, adapté au mobile et au bureau, en HTML et CSS.</p><p><strong>Réalisation.</strong> HTML et CSS avec media queries, Flexbox, animations CSS et intégration vidéo. Déploiement sur GitHub Pages.</p><p><strong>Résultat.</strong> Site responsive consultable sur GitHub Pages, avec une navigation entre les pages du café.</p></details></div>
+    </article>
+<article class="archive-card" id="archive-projet-reseau" data-category="scolaire">
+      <div class="archive-image"><img src="assets/images/projet-reseau.webp" alt="Configuration Réseau &amp; Firewall" loading="lazy" width="640" height="360"></div>
+      <div class="archive-content"><p class="eyebrow">SEMESTRE 2 · 2024–2025</p><h3 class="archive-title">Configuration Réseau &amp; Firewall</h3>
+      <p>Mise en situation d&#x27;administrateur système : sécurisation d&#x27;une infrastructure multi-sous-réseaux avec règles iptables, NAT, VLANs et filtrage applicatif sur Linux.</p><ul class="archive-tags"><li>Linux</li><li>iptables</li><li>NAT</li><li>VLANs</li><li>Sécurité</li></ul>
+      <div class="archive-links"></div>
+      <details class="archive-detail"><summary>Dans les détails <span aria-hidden="true">+</span></summary><p><strong>Contexte.</strong> TP réseau BUT Informatique : mise en situation d&#x27;admin système devant sécuriser une infrastructure multi-sous-réseaux.</p><p><strong>Objectif.</strong> Configurer et sécuriser un réseau complet avec isolation des zones et contrôle du trafic entrant/sortant.</p><p><strong>Réalisation.</strong> Règles iptables, NAT, VLANs et filtrage applicatif sur routeurs Linux. Rédaction d&#x27;une politique de sécurité réseau documentée.</p><p><strong>Résultat.</strong> TP de configuration réseau sous Linux : règles de filtrage, NAT et isolation des zones.</p></details></div>
+    </article></div></div></dialog>
+  <noscript><p class="no-script-note">Les projets détaillés sont accessibles dans les dépôts <a href="https://github.com/NekoFly5">GitHub</a>. Le CV et les coordonnées sont disponibles sur cette page.</p></noscript>
 </body>
-
 </html>
